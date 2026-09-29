@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Little Words</title>
+
+  <!-- Google Fonts for Friendly Rounded Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+  /* ==========================================================================
+     Design Tokens & Themes
+     ========================================================================== */
+  :root {
+    --bg-gradient: linear-gradient(135deg, #FFF9E6 0%, #FFF0F5 50%, #E8F4FD 100%);
+    --bg-card: #FFFFFF;
+    --bg-header: rgba(255, 255, 255, 0.88);
+    --text-main: #1E293B;
+    --text-sub: #475569;
+    --text-muted: #64748B;
+    --border-card: rgba(255, 255, 255, 0.9);
+    --border-subtle: #E2E8F0;
+
+    --primary-coral: #FF6B6B;
+    --primary-yellow: #FFD93D;
+    --primary-green: #6BCB77;
+    --primary-blue: #4D96FF;
+    --primary-purple: #9B5DE5;
+    --primary-pink: #F15BB5;
+    --primary-orange: #FF9234;
+
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.07), 0 4px 10px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 20px 35px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.04);
+    --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --font-family: 'Nunito', 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg-gradient: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F2A3F 100%);
+      --bg-card: #1E293B;
+      --bg-header: rgba(30, 41, 59, 0.88);
+      --text-main: #F8FAFC;
+      --text-sub: #CBD5E1;
+      --text-muted: #94A3B8;
+      --border-card: rgba(255, 255, 255, 0.1);
+      --border-subtle: #334155;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 20px 35px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg-gradient: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F2A3F 100%);
+    --bg-card: #1E293B;
+    --bg-header: rgba(30, 41, 59, 0.88);
+    --text-main: #F8FAFC;
+    --text-sub: #CBD5E1;
+    --text-muted: #94A3B8;
+    --border-card: rgba(255, 255, 255, 0.1);
+    --border-subtle: #334155;
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 20px 35px rgba(0, 0, 0, 0.45);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: var(--font-family);
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .app-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 14px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--bg-header);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--border-card);
+    flex-shrink: 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brand-icon {
+    font-size: 1.6rem;
+    animation: float-subtle 3s ease-in-out infinite;
+  }
+
+  .brand-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  .mode-switcher {
+    display: flex;
+    background: var(--border-subtle);
+    padding: 4px;
+    border-radius: 999px;
+    gap: 4px;
+  }
+
+  .mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    border-radius: 999px;
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.25s var(--spring-bounce);
+  }
+
+  .mode-btn.active {
+    background: var(--bg-card);
+    color: var(--primary-purple);
+    box-shadow: 0 4px 12px rgba(155, 93, 229, 0.25);
+    transform: scale(1.04);
+  }
+
+  .guardian-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tool-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border: 2px solid var(--border-subtle);
+    background: var(--bg-card);
+    border-radius: 14px;
+    font-family: var(--font-family);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s var(--spring-bounce);
+  }
+
+  .tool-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .tool-btn:active {
+    transform: scale(0.94);
+  }
+
+  .tool-btn.active {
+    background: #EBF4FF;
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+  }
+
+  .tool-btn.muted {
+    opacity: 0.6;
+  }
+
+  .category-nav {
+    display: flex;
+    gap: 8px;
+    padding: 10px 2px 4px 2px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
+
+  .category-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 18px;
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--text-sub);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+    transition: all 0.25s var(--spring-bounce);
+  }
+
+  .cat-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  .cat-btn.active {
+    color: #FFFFFF !important;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px) scale(1.04);
+  }
+
+  .cat-icon {
+    font-size: 1.25rem;
+  }
+
+  .interactive-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+    position: relative;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .view-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .view-container[hidden] {
+    display: none !important;
+  }
+
+  .flashcard-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    gap: 16px;
+  }
+
+  .nav-arrow-btn {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 3px solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.25s var(--spring-bounce);
+    z-index: 20;
+  }
+
+  .nav-arrow-btn:hover {
+    transform: scale(1.12);
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .nav-arrow-btn:active {
+    transform: scale(0.9);
+  }
+
+  .flashcard {
+    flex: 1;
+    max-width: 500px;
+    height: 100%;
+    max-height: 480px;
+    background: var(--bg-card);
+    border-radius: 32px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-lg);
+    border: 6px solid transparent;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s var(--spring-bounce), box-shadow 0.2s ease;
+  }
+
+  .flashcard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 45px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .card-graphic {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+  }
+
+  .card-svg-container {
+    width: 100%;
+    height: 100%;
+    max-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-svg-container svg {
+    max-width: 100%;
+    max-height: 100%;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.08));
+    transition: transform 0.3s var(--spring-bounce);
+  }
+
+  .flashcard:hover .card-svg-container svg {
+    transform: scale(1.06);
+  }
+
+  .card-text-container {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-title {
+    font-size: 3.4rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .card-subtitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-sub);
+  }
+
+  .card-phonics {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--border-subtle);
+    padding: 3px 12px;
+    border-radius: 10px;
+  }
+
+  .card-action-prompt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    background: var(--border-subtle);
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin-top: 4px;
+  }
+
+  .quiz-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    max-width: 760px;
+    gap: 14px;
+  }
+
+  .quiz-prompt-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 14px 24px;
+    box-shadow: var(--shadow-md);
+    border: 4px solid var(--primary-purple);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: transform 0.2s var(--spring-bounce);
+    max-width: 580px;
+    width: 100%;
+  }
+
+  .quiz-prompt-card:hover {
+    transform: scale(1.02);
+  }
+
+  .quiz-speaker-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-purple), #7B2CBF);
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(155, 93, 229, 0.4);
+    cursor: pointer;
+    flex-shrink: 0;
+    animation: float-subtle 2s ease-in-out infinite;
+  }
+
+  .quiz-prompt-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quiz-prompt-sub {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #9333EA;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .quiz-prompt-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .quiz-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    width: 100%;
+    max-height: 380px;
+    align-items: stretch;
+  }
+
+  .quiz-choice-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: var(--shadow-md);
+    border: 5px solid var(--border-subtle);
+    cursor: pointer;
+    transition: transform 0.25s var(--spring-bounce), border-color 0.2s ease;
+    position: relative;
+  }
+
+  .quiz-choice-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-blue);
+  }
+
+  .quiz-choice-card:active {
+    transform: scale(0.95);
+  }
+
+  .quiz-choice-svg {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quiz-choice-svg svg {
+    max-width: 100%;
+    max-height: 100%;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+  }
+
+  .quiz-choice-label {
+    font-size: 1.35rem;
+    font-weight: 900;
+    text-align: center;
+  }
+
+  .quiz-choice-card.correct {
+    border-color: var(--primary-green) !important;
+    background: #F0FDF4;
+    animation: celebration-pop 0.6s var(--spring-bounce);
+  }
+
+  .quiz-choice-card.incorrect {
+    border-color: #F87171 !important;
+    background: #FEF2F2;
+    animation: wiggle-shake 0.6s ease-in-out;
+  }
+
+  .app-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 14px;
+    background: var(--bg-header);
+    backdrop-filter: blur(8px);
+    border-radius: 18px;
+    border: 2px solid var(--border-card);
+    flex-shrink: 0;
+    gap: 10px;
+  }
+
+  .footer-tip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .stars-counter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #FEF3C7;
+    border: 2px solid #FDE68A;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-weight: 900;
+    color: #B45309;
+    font-size: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s var(--spring-bounce);
+  }
+
+  .stars-counter.pulse {
+    animation: star-pulse 0.6s var(--spring-bounce);
+  }
+
+  .welcome-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  .welcome-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .welcome-card {
+    background: var(--bg-card);
+    padding: 32px 28px;
+    border-radius: 32px;
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    border: 5px solid #FFD93D;
+    animation: bounce-in 0.6s var(--spring-bounce);
+  }
+
+  .welcome-emoji {
+    font-size: 3.5rem;
+    margin-bottom: 8px;
+    animation: float-subtle 2.5s ease-in-out infinite;
+  }
+
+  .welcome-card h2 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .welcome-card p {
+    font-size: 1rem;
+    color: var(--text-sub);
+    line-height: 1.4;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #FF6B6B, #FF9234);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px;
+    font-family: var(--font-family);
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255, 107, 107, 0.4);
+    transition: all 0.25s var(--spring-bounce);
+  }
+
+  .start-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  @keyframes float-subtle {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(2deg); }
+  }
+
+  @keyframes card-squish {
+    0% { transform: scale(1); }
+    30% { transform: scale(0.92) translateY(6px); }
+    60% { transform: scale(1.08) translateY(-8px); }
+    80% { transform: scale(0.98) translateY(2px); }
+    100% { transform: scale(1) translateY(0); }
+  }
+
+  @keyframes bounce-in {
+    0% { opacity: 0; transform: scale(0.6) translateY(30px); }
+    60% { opacity: 1; transform: scale(1.05) translateY(-6px); }
+    85% { transform: scale(0.98) translateY(2px); }
+    100% { transform: scale(1) translateY(0); }
+  }
+
+  @keyframes wiggle-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px) rotate(-5deg); }
+    40% { transform: translateX(8px) rotate(4deg); }
+    60% { transform: translateX(-6px) rotate(-3deg); }
+    80% { transform: translateX(4px) rotate(2deg); }
+  }
+
+  @keyframes star-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.35) rotate(15deg); background: #FDE047; }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes celebration-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.12) rotate(3deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
+  .animate-squish { animation: card-squish 0.5s var(--spring-bounce); }
+  .animate-bounce-in { animation: bounce-in 0.45s var(--spring-bounce); }
+
+  @media (max-width: 768px) {
+    .brand-title, .mode-text, .tool-label { display: none; }
+    .nav-arrow-btn { width: 50px; height: 50px; min-width: 50px; font-size: 1.4rem; }
+    .card-title { font-size: 2.6rem; }
+    .card-subtitle { font-size: 1.25rem; }
+    .quiz-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .quiz-choice-svg { height: 90px; }
+    .quiz-choice-label { font-size: 1.1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .quiz-grid { grid-template-columns: 1fr; max-height: none; }
+    .quiz-choice-card { flex-direction: row; padding: 10px 16px; justify-content: flex-start; gap: 14px; }
+    .quiz-choice-svg { width: 60px; height: 60px; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- Fullscreen Celebration Particles Canvas -->
+<canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+<div class="app-wrapper" id="app">
+  <!-- Header & Guardian Controls -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">🎈</span>
+      <h1 class="brand-title">Little Words</h1>
+    </div>
+
+    <!-- Mode Switcher -->
+    <div class="mode-switcher" role="tablist" aria-label="Learning Mode">
+      <button type="button" class="mode-btn active" id="btn-mode-learn" role="tab" aria-selected="true">
+        <span class="mode-icon">👀</span>
+        <span class="mode-text">Explore</span>
+      </button>
+      <button type="button" class="mode-btn" id="btn-mode-quiz" role="tab" aria-selected="false">
+        <span class="mode-icon">🎯</span>
+        <span class="mode-text">Find It!</span>
+      </button>
+    </div>
+
+    <!-- Guardian Quick Settings / Audio Toolbar -->
+    <div class="guardian-toolbar">
+      <button type="button" class="tool-btn active" id="btn-toggle-sfx" title="Sound Effects On/Off" aria-label="Sound Effects On/Off" aria-pressed="true">
+        <span class="tool-icon" id="sfx-icon">🔔</span>
+        <span class="tool-label">SFX</span>
+      </button>
+      <button type="button" class="tool-btn active" id="btn-toggle-speech" title="Voice Speech On/Off" aria-label="Voice Speech On/Off" aria-pressed="true">
+        <span class="tool-icon" id="speech-icon">🗣️</span>
+        <span class="tool-label">Voice</span>
+      </button>
+      <button type="button" class="tool-btn" id="btn-toggle-fullscreen" title="Fullscreen Mode" aria-label="Fullscreen Mode">
+        <span class="tool-icon">⛶</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Category Navigation Bar -->
+  <nav class="category-nav" id="category-nav" aria-label="Learning Categories"></nav>
+
+  <!-- Main Learning & Interactive Stage -->
+  <main class="interactive-stage" id="stage">
+    <div id="flashcard-view" class="view-container"></div>
+    <div id="quiz-view" class="view-container" hidden></div>
+  </main>
+
+  <!-- Footer with Tips for Guardians & Keyboard Notice -->
+  <footer class="app-footer">
+    <div class="footer-tip">
+      <span class="tip-icon">💡</span>
+      <span class="tip-text" id="footer-tip-text">Tap cards to hear! Press <strong>A-Z</strong> or <strong>Spacebar</strong> for fun surprises.</span>
+    </div>
+    <div class="stars-counter" id="stars-counter" title="Stars Earned">
+      <span class="star-icon">⭐</span>
+      <span class="star-count" id="star-count-num">0</span>
+    </div>
+  </footer>
+</div>
+
+<!-- Audio Unlock / Welcome Modal -->
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-card">
+    <div class="welcome-emoji">🌟</div>
+    <h2>Let's Play & Learn!</h2>
+    <p>Tap anywhere to start learning words, colors, letters, and sounds together!</p>
+    <button type="button" class="start-btn" id="btn-start">
+      <span>Start Playing! 🚀</span>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   Self-Contained Inlined Scripts (Zero External Imports, 100% Offline)
+   ========================================================================== */
+
+// 1. Data Content
+const CATEGORIES = [
+  { id: 'letters', label: 'Letters', icon: '🔤', themeColor: '#FF6B6B' },
+  { id: 'colors', label: 'Colors', icon: '🎨', themeColor: '#4D96FF' },
+  { id: 'shapes', label: 'Shapes', icon: '🔷', themeColor: '#FFD93D' },
+  { id: 'animals', label: 'Animals', icon: '🐶', themeColor: '#6BCB77' },
+  { id: 'objects', label: 'Objects', icon: '🧸', themeColor: '#FF9234' },
+  { id: 'body', label: 'Body Parts', icon: '👀', themeColor: '#9B5DE5' },
+  { id: 'greetings', label: 'Greetings', icon: '💬', themeColor: '#F15BB5' }
+];
+
+const LEARNING_ITEMS = [
+  // Letters (A-Z)
+  { id: 'letter-a', categoryId: 'letters', label: 'A a', subLabel: 'Apple', speechText: 'A! A is for Apple. Ah, ah, apple!', themeColor: '#EF4444', sfx: 'pop', svgKey: 'apple' },
+  { id: 'letter-b', categoryId: 'letters', label: 'B b', subLabel: 'Ball', speechText: 'B! B is for Ball. Buh, buh, ball!', themeColor: '#3B82F6', sfx: 'boing', svgKey: 'ball' },
+  { id: 'letter-c', categoryId: 'letters', label: 'C c', subLabel: 'Cat', speechText: 'C! C is for Cat. Meow!', themeColor: '#F59E0B', sfx: 'pop', svgKey: 'cat' },
+  { id: 'letter-d', categoryId: 'letters', label: 'D d', subLabel: 'Dog', speechText: 'D! D is for Dog. Woof woof!', themeColor: '#10B981', sfx: 'pop', svgKey: 'dog' },
+  { id: 'letter-e', categoryId: 'letters', label: 'E e', subLabel: 'Elephant', speechText: 'E! E is for Elephant. Big elephant!', themeColor: '#8B5CF6', sfx: 'pop', svgKey: 'elephant' },
+  { id: 'letter-f', categoryId: 'letters', label: 'F f', subLabel: 'Fish', speechText: 'F! F is for Fish. Swim swim fish!', themeColor: '#06B6D4', sfx: 'bubble', svgKey: 'fish' },
+  { id: 'letter-g', categoryId: 'letters', label: 'G g', subLabel: 'Giraffe', speechText: 'G! G is for Giraffe. Tall giraffe!', themeColor: '#EAB308', sfx: 'pop', svgKey: 'giraffe' },
+  { id: 'letter-h', categoryId: 'letters', label: 'H h', subLabel: 'Hat', speechText: 'H! H is for Hat. Put on your hat!', themeColor: '#EC4899', sfx: 'pop', svgKey: 'hat' },
+  { id: 'letter-i', categoryId: 'letters', label: 'I i', subLabel: 'Igloo', speechText: 'I! I is for Igloo. Brrr, cozy igloo!', themeColor: '#38BDF8', sfx: 'twinkle', svgKey: 'igloo' },
+  { id: 'letter-j', categoryId: 'letters', label: 'J j', subLabel: 'Jellyfish', speechText: 'J! J is for Jellyfish. Wiggle wiggle!', themeColor: '#A855F7', sfx: 'bubble', svgKey: 'jellyfish' },
+  { id: 'letter-k', categoryId: 'letters', label: 'K k', subLabel: 'Kite', speechText: 'K! K is for Kite. Fly high kite!', themeColor: '#F97316', sfx: 'twinkle', svgKey: 'kite' },
+  { id: 'letter-l', categoryId: 'letters', label: 'L l', subLabel: 'Lion', speechText: 'L! L is for Lion. Roar!', themeColor: '#EAB308', sfx: 'pop', svgKey: 'lion' },
+  { id: 'letter-m', categoryId: 'letters', label: 'M m', subLabel: 'Monkey', speechText: 'M! M is for Monkey. Ooh ooh aah aah!', themeColor: '#84CC16', sfx: 'boing', svgKey: 'monkey' },
+  { id: 'letter-n', categoryId: 'letters', label: 'N n', subLabel: 'Nest', speechText: 'N! N is for Nest. Little bird nest!', themeColor: '#14B8A6', sfx: 'pop', svgKey: 'nest' },
+  { id: 'letter-o', categoryId: 'letters', label: 'O o', subLabel: 'Owl', speechText: 'O! O is for Owl. Hoot hoot!', themeColor: '#6366F1', sfx: 'pop', svgKey: 'owl' },
+  { id: 'letter-p', categoryId: 'letters', label: 'P p', subLabel: 'Penguin', speechText: 'P! P is for Penguin. Waddle waddle penguin!', themeColor: '#0EA5E9', sfx: 'pop', svgKey: 'penguin' },
+  { id: 'letter-q', categoryId: 'letters', label: 'Q q', subLabel: 'Queen', speechText: 'Q! Q is for Queen. Shiny golden crown!', themeColor: '#D946EF', sfx: 'twinkle', svgKey: 'queen' },
+  { id: 'letter-r', categoryId: 'letters', label: 'R r', subLabel: 'Rainbow', speechText: 'R! R is for Rainbow. Beautiful rainbow colors!', themeColor: '#EC4899', sfx: 'twinkle', svgKey: 'rainbow' },
+  { id: 'letter-s', categoryId: 'letters', label: 'S s', subLabel: 'Sun', speechText: 'S! S is for Sun. Warm and bright sunshine!', themeColor: '#F59E0B', sfx: 'twinkle', svgKey: 'sun' },
+  { id: 'letter-t', categoryId: 'letters', label: 'T t', subLabel: 'Tree', speechText: 'T! T is for Tree. Tall green tree!', themeColor: '#22C55E', sfx: 'pop', svgKey: 'tree' },
+  { id: 'letter-u', categoryId: 'letters', label: 'U u', subLabel: 'Umbrella', speechText: 'U! U is for Umbrella. Up, up umbrella!', themeColor: '#8B5CF6', sfx: 'pop', svgKey: 'umbrella' },
+  { id: 'letter-v', categoryId: 'letters', label: 'V v', subLabel: 'Violin', speechText: 'V! V is for Violin. Sweet music!', themeColor: '#F97316', sfx: 'twinkle', svgKey: 'violin' },
+  { id: 'letter-w', categoryId: 'letters', label: 'W w', subLabel: 'Whale', speechText: 'W! W is for Whale. Big friendly whale!', themeColor: '#0284C7', sfx: 'bubble', svgKey: 'whale' },
+  { id: 'letter-x', categoryId: 'letters', label: 'X x', subLabel: 'Xylophone', speechText: 'X! X is for Xylophone. Ding ding dong!', themeColor: '#EC4899', sfx: 'twinkle', svgKey: 'xylophone' },
+  { id: 'letter-y', categoryId: 'letters', label: 'Y y', subLabel: 'Yo-yo', speechText: 'Y! Y is for Yo-yo. Up and down!', themeColor: '#EAB308', sfx: 'boing', svgKey: 'yoyo' },
+  { id: 'letter-z', categoryId: 'letters', label: 'Z z', subLabel: 'Zebra', speechText: 'Z! Z is for Zebra. Striped zebra!', themeColor: '#475569', sfx: 'pop', svgKey: 'zebra' },
+
+  // Colors
+  { id: 'color-red', categoryId: 'colors', label: 'Red', subLabel: 'Red like an Apple', speechText: 'Red! Like a juicy red apple!', themeColor: '#EF4444', sfx: 'pop', svgKey: 'color-red' },
+  { id: 'color-blue', categoryId: 'colors', label: 'Blue', subLabel: 'Blue like the Ocean', speechText: 'Blue! Like the big blue ocean and sky!', themeColor: '#3B82F6', sfx: 'bubble', svgKey: 'color-blue' },
+  { id: 'color-yellow', categoryId: 'colors', label: 'Yellow', subLabel: 'Yellow like the Sun', speechText: 'Yellow! Like the bright sunshine!', themeColor: '#FBBF24', sfx: 'twinkle', svgKey: 'color-yellow' },
+  { id: 'color-green', categoryId: 'colors', label: 'Green', subLabel: 'Green like Grass', speechText: 'Green! Like fresh green grass and trees!', themeColor: '#22C55E', sfx: 'pop', svgKey: 'color-green' },
+  { id: 'color-orange', categoryId: 'colors', label: 'Orange', subLabel: 'Orange like a Fruit', speechText: 'Orange! Yummy orange fruit!', themeColor: '#F97316', sfx: 'pop', svgKey: 'color-orange' },
+  { id: 'color-purple', categoryId: 'colors', label: 'Purple', subLabel: 'Purple like Grapes', speechText: 'Purple! Sweet purple grapes!', themeColor: '#A855F7', sfx: 'pop', svgKey: 'color-purple' },
+  { id: 'color-pink', categoryId: 'colors', label: 'Pink', subLabel: 'Pink like a Flamingo', speechText: 'Pink! Pretty pink flowers!', themeColor: '#F472B6', sfx: 'twinkle', svgKey: 'color-pink' },
+  { id: 'color-brown', categoryId: 'colors', label: 'Brown', subLabel: 'Brown like a Teddy Bear', speechText: 'Brown! Soft brown teddy bear!', themeColor: '#8D5B4C', sfx: 'pop', svgKey: 'color-brown' },
+  { id: 'color-black', categoryId: 'colors', label: 'Black', subLabel: 'Black like the Night Sky', speechText: 'Black! Like the night sky with stars!', themeColor: '#334155', sfx: 'pop', svgKey: 'color-black' },
+  { id: 'color-white', categoryId: 'colors', label: 'White', subLabel: 'White like a Fluffy Cloud', speechText: 'White! Like a soft fluffy cloud and snow!', themeColor: '#94A3B8', sfx: 'twinkle', svgKey: 'color-white' },
+
+  // Shapes
+  { id: 'shape-circle', categoryId: 'shapes', label: 'Circle', subLabel: 'Round and Round', speechText: 'Circle! Round and round like a ball!', themeColor: '#EF4444', sfx: 'boing', svgKey: 'shape-circle' },
+  { id: 'shape-square', categoryId: 'shapes', label: 'Square', subLabel: 'Four Equal Sides', speechText: 'Square! One, two, three, four equal sides!', themeColor: '#3B82F6', sfx: 'pop', svgKey: 'shape-square' },
+  { id: 'shape-triangle', categoryId: 'shapes', label: 'Triangle', subLabel: 'Three Corners', speechText: 'Triangle! Pointy with three corners!', themeColor: '#EAB308', sfx: 'pop', svgKey: 'shape-triangle' },
+  { id: 'shape-star', categoryId: 'shapes', label: 'Star', subLabel: 'Twinkle Twinkle', speechText: 'Star! Twinkle twinkle little star, shining bright!', themeColor: '#F59E0B', sfx: 'twinkle', svgKey: 'shape-star' },
+  { id: 'shape-heart', categoryId: 'shapes', label: 'Heart', subLabel: 'Full of Love', speechText: 'Heart! I love you with all my heart!', themeColor: '#EC4899', sfx: 'twinkle', svgKey: 'shape-heart' },
+  { id: 'shape-rectangle', categoryId: 'shapes', label: 'Rectangle', subLabel: 'Long and Wide', speechText: 'Rectangle! Long and wide like a door!', themeColor: '#10B981', sfx: 'pop', svgKey: 'shape-rectangle' },
+  { id: 'shape-oval', categoryId: 'shapes', label: 'Oval', subLabel: 'Like an Egg', speechText: 'Oval! Round and stretched like an egg!', themeColor: '#8B5CF6', sfx: 'boing', svgKey: 'shape-oval' },
+  { id: 'shape-diamond', categoryId: 'shapes', label: 'Diamond', subLabel: 'Sparkly Shape', speechText: 'Diamond! Like a kite in the sky!', themeColor: '#06B6D4', sfx: 'twinkle', svgKey: 'shape-diamond' },
+
+  // Animals
+  { id: 'animal-dog', categoryId: 'animals', label: 'Dog', subLabel: 'Woof Woof!', speechText: 'Dog! Woof woof! Friendly puppy wagging its tail!', themeColor: '#F59E0B', sfx: 'pop', svgKey: 'dog' },
+  { id: 'animal-cat', categoryId: 'animals', label: 'Cat', subLabel: 'Meow Meow!', speechText: 'Cat! Meow meow! Soft little kitten!', themeColor: '#EC4899', sfx: 'pop', svgKey: 'cat' },
+  { id: 'animal-cow', categoryId: 'animals', label: 'Cow', subLabel: 'Moo Moo!', speechText: 'Cow! Moo moo! Big happy cow on the farm!', themeColor: '#10B981', sfx: 'pop', svgKey: 'cow' },
+  { id: 'animal-duck', categoryId: 'animals', label: 'Duck', subLabel: 'Quack Quack!', speechText: 'Duck! Quack quack! Swimming in the pond!', themeColor: '#EAB308', sfx: 'bubble', svgKey: 'duck' },
+  { id: 'animal-lion', categoryId: 'animals', label: 'Lion', subLabel: 'Roar!', speechText: 'Lion! Roar! The brave king of the jungle!', themeColor: '#F97316', sfx: 'pop', svgKey: 'lion' },
+  { id: 'animal-elephant', categoryId: 'animals', label: 'Elephant', subLabel: 'Trumpet!', speechText: 'Elephant! Big ears and a long trunk!', themeColor: '#6366F1', sfx: 'pop', svgKey: 'elephant' },
+  { id: 'animal-monkey', categoryId: 'animals', label: 'Monkey', subLabel: 'Ooh Ooh Aah Aah!', speechText: 'Monkey! Ooh ooh aah aah! Swinging in trees!', themeColor: '#84CC16', sfx: 'boing', svgKey: 'monkey' },
+  { id: 'animal-bird', categoryId: 'animals', label: 'Bird', subLabel: 'Tweet Tweet!', speechText: 'Bird! Tweet tweet! Flapping pretty wings!', themeColor: '#0EA5E9', sfx: 'twinkle', svgKey: 'bird' },
+  { id: 'animal-frog', categoryId: 'animals', label: 'Frog', subLabel: 'Ribbit Ribbit!', speechText: 'Frog! Ribbit ribbit! Hop hop on a lily pad!', themeColor: '#22C55E', sfx: 'boing', svgKey: 'frog' },
+  { id: 'animal-pig', categoryId: 'animals', label: 'Pig', subLabel: 'Oink Oink!', speechText: 'Pig! Oink oink! Cute curly tail!', themeColor: '#F472B6', sfx: 'pop', svgKey: 'pig' },
+  { id: 'animal-sheep', categoryId: 'animals', label: 'Sheep', subLabel: 'Baa Baa!', speechText: 'Sheep! Baa baa! Fluffy soft wool!', themeColor: '#64748B', sfx: 'pop', svgKey: 'sheep' },
+  { id: 'animal-horse', categoryId: 'animals', label: 'Horse', subLabel: 'Neigh Neigh!', speechText: 'Horse! Neigh! Galloping fast!', themeColor: '#A16207', sfx: 'pop', svgKey: 'horse' },
+
+  // Everyday Objects
+  { id: 'object-cup', categoryId: 'objects', label: 'Cup', subLabel: 'Drink Water', speechText: 'Cup! Sip, sip, drink some yummy water!', themeColor: '#3B82F6', sfx: 'bubble', svgKey: 'cup' },
+  { id: 'object-spoon', categoryId: 'objects', label: 'Spoon', subLabel: 'Time to Eat', speechText: 'Spoon! Yum yum, time to eat delicious food!', themeColor: '#10B981', sfx: 'pop', svgKey: 'spoon' },
+  { id: 'object-shoes', categoryId: 'objects', label: 'Shoes', subLabel: 'Put on Shoes', speechText: 'Shoes! Put on your shoes, let\'s go outside and play!', themeColor: '#EC4899', sfx: 'pop', svgKey: 'shoes' },
+  { id: 'object-ball', categoryId: 'objects', label: 'Ball', subLabel: 'Bounce Bounce', speechText: 'Ball! Bounce, bounce, catch the bouncy ball!', themeColor: '#EF4444', sfx: 'boing', svgKey: 'ball' },
+  { id: 'object-bed', categoryId: 'objects', label: 'Bed', subLabel: 'Cozy Sleep', speechText: 'Bed! Cozy and warm, time to sleep and dream!', themeColor: '#8B5CF6', sfx: 'twinkle', svgKey: 'bed' },
+  { id: 'object-clock', categoryId: 'objects', label: 'Clock', subLabel: 'Tick Tock', speechText: 'Clock! Tick tock, tick tock, what time is it?', themeColor: '#F59E0B', sfx: 'pop', svgKey: 'clock' },
+  { id: 'object-book', categoryId: 'objects', label: 'Book', subLabel: 'Story Time', speechText: 'Book! Open the book, let\'s read a fun story together!', themeColor: '#06B6D4', sfx: 'pop', svgKey: 'book' },
+  { id: 'object-car', categoryId: 'objects', label: 'Car', subLabel: 'Vroom Vroom!', speechText: 'Car! Vroom, vroom! Beep beep!', themeColor: '#EF4444', sfx: 'pop', svgKey: 'car' },
+  { id: 'object-toothbrush', categoryId: 'objects', label: 'Toothbrush', subLabel: 'Brush Brush', speechText: 'Toothbrush! Brush, brush, brush your shiny teeth!', themeColor: '#14B8A6', sfx: 'bubble', svgKey: 'toothbrush' },
+  { id: 'object-hat', categoryId: 'objects', label: 'Hat', subLabel: 'On Your Head', speechText: 'Hat! Put a cozy hat on your head!', themeColor: '#F97316', sfx: 'pop', svgKey: 'hat' },
+
+  // Body Parts
+  { id: 'body-eyes', categoryId: 'body', label: 'Eyes', subLabel: 'I can see!', speechText: 'Eyes! Blink, blink! I can see with my two eyes!', themeColor: '#3B82F6', sfx: 'twinkle', svgKey: 'eyes' },
+  { id: 'body-nose', categoryId: 'body', label: 'Nose', subLabel: 'Beep Beep!', speechText: 'Nose! Sniff, sniff, and beep beep on your nose!', themeColor: '#EC4899', sfx: 'boing', svgKey: 'nose' },
+  { id: 'body-mouth', categoryId: 'body', label: 'Mouth', subLabel: 'Big Happy Smile', speechText: 'Mouth! Big happy smile and say cheese!', themeColor: '#EF4444', sfx: 'pop', svgKey: 'mouth' },
+  { id: 'body-ears', categoryId: 'body', label: 'Ears', subLabel: 'Listen to Sound', speechText: 'Ears! Listen to the sweet music with your ears!', themeColor: '#F59E0B', sfx: 'twinkle', svgKey: 'ears' },
+  { id: 'body-hands', categoryId: 'body', label: 'Hands', subLabel: 'Clap Clap Clap!', speechText: 'Hands! Clap, clap, clap your happy hands!', themeColor: '#10B981', sfx: 'pop', svgKey: 'hands' },
+  { id: 'body-feet', categoryId: 'body', label: 'Feet', subLabel: 'Stomp Stomp!', speechText: 'Feet! Stomp, stomp, stomp your happy feet!', themeColor: '#8B5CF6', sfx: 'boing', svgKey: 'feet' },
+  { id: 'body-tummy', categoryId: 'body', label: 'Tummy', subLabel: 'Tickle Tickle!', speechText: 'Tummy! Tickle tickle tickle on the tummy!', themeColor: '#F97316', sfx: 'bubble', svgKey: 'tummy' },
+  { id: 'body-head', categoryId: 'body', label: 'Head', subLabel: 'Nod Yes!', speechText: 'Head! Nod your head yes, yes, yes!', themeColor: '#06B6D4', sfx: 'pop', svgKey: 'head' },
+
+  // Greetings & Social
+  { id: 'greet-hello', categoryId: 'greetings', label: 'Hello!', subLabel: 'Wave Your Hand 👋', speechText: 'Hello! Wave your hand and say hello to friends!', themeColor: '#10B981', sfx: 'twinkle', svgKey: 'wave' },
+  { id: 'greet-byebye', categoryId: 'greetings', label: 'Bye-bye!', subLabel: 'See You Soon 👋', speechText: 'Bye-bye! See you soon, have a wonderful day!', themeColor: '#3B82F6', sfx: 'bubble', svgKey: 'wave' },
+  { id: 'greet-please', categoryId: 'greetings', label: 'Please', subLabel: 'Polite Magic Word ✨', speechText: 'Please! Polite magic words make everyone smile!', themeColor: '#8B5CF6', sfx: 'twinkle', svgKey: 'please' },
+  { id: 'greet-thankyou', categoryId: 'greetings', label: 'Thank You!', subLabel: 'Kind & Nice 💖', speechText: 'Thank you! So kind, so nice, and polite!', themeColor: '#EC4899', sfx: 'twinkle', svgKey: 'heart' },
+  { id: 'greet-morning', categoryId: 'greetings', label: 'Good Morning!', subLabel: 'Rise and Shine ☀️', speechText: 'Good morning! Rise and shine, the sun is up!', themeColor: '#F59E0B', sfx: 'twinkle', svgKey: 'sun' },
+  { id: 'greet-night', categoryId: 'greetings', label: 'Night Night!', subLabel: 'Sweet Dreams 🌙', speechText: 'Night night! Sleep tight and sweet dreams under the moon!', themeColor: '#6366F1', sfx: 'twinkle', svgKey: 'moon' }
+];
+
+// 2. Vector SVGs Library
+function createSVG(width, height, viewBox, content) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox || `0 0 ${width} ${height}`}">${content}</svg>`;
+}
+
+const kawaiiFace = (x, y, scale = 1) => `
+  <circle cx="${x - 14 * scale}" cy="${y}" r="${4.5 * scale}" fill="#1e293b"/>
+  <circle cx="${x + 14 * scale}" cy="${y}" r="${4.5 * scale}" fill="#1e293b"/>
+  <circle cx="${x - 16 * scale}" cy="${y - 2}" r="${1.5 * scale}" fill="#ffffff"/>
+  <circle cx="${x + 12 * scale}" cy="${y - 2}" r="${1.5 * scale}" fill="#ffffff"/>
+  <path d="M ${x - 10 * scale} ${y + 12 * scale} Q ${x} ${y + 20 * scale} ${x + 10 * scale} ${y + 12 * scale}"
+        stroke="#EF4444" stroke-width="${3 * scale}" fill="none" stroke-linecap="round"/>
+  <ellipse cx="${x - 22 * scale}" cy="${y + 8 * scale}" rx="${5 * scale}" ry="${3 * scale}" fill="#FCA5A5" opacity="0.6"/>
+  <ellipse cx="${x + 22 * scale}" cy="${y + 8 * scale}" rx="${5 * scale}" ry="${3 * scale}" fill="#FCA5A5" opacity="0.6"/>
+`;
+
+const SVG_LIBRARY = {
+  default: (color = '#64748B') => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="${color}" opacity="0.15"/>
+    <circle cx="100" cy="100" r="55" fill="${color}"/>
+    ${kawaiiFace(100, 100, 1)}
+  `),
+  'shape-circle': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="85" fill="#EF4444"/>
+    <circle cx="65" cy="65" r="20" fill="#FCA5A5" opacity="0.6"/>
+    ${kawaiiFace(100, 100, 1.1)}
+  `),
+  'shape-square': () => createSVG(200, 200, null, `
+    <rect x="20" y="20" width="160" height="160" rx="24" fill="#3B82F6"/>
+    <circle cx="60" cy="60" r="18" fill="#93C5FD" opacity="0.6"/>
+    ${kawaiiFace(100, 100, 1.1)}
+  `),
+  'shape-triangle': () => createSVG(200, 200, null, `
+    <path d="M 100 15 L 185 175 L 15 175 Z" fill="#EAB308" stroke="#FACC15" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="85" cy="70" r="14" fill="#FEF08A" opacity="0.7"/>
+    ${kawaiiFace(100, 120, 1.1)}
+  `),
+  'shape-star': () => createSVG(200, 200, null, `
+    <path d="M 100 10 L 125 65 L 185 70 L 140 115 L 155 175 L 100 142 L 45 175 L 60 115 L 15 70 L 75 65 Z"
+          fill="#F59E0B" stroke="#FBBF24" stroke-width="5" stroke-linejoin="round"/>
+    ${kawaiiFace(100, 108, 0.9)}
+  `),
+  'shape-heart': () => createSVG(200, 200, null, `
+    <path d="M 100 175 C 100 175 25 115 25 70 C 25 40 45 20 70 20 C 85 20 95 30 100 40 C 105 30 115 20 130 20 C 155 20 175 40 175 70 C 175 115 100 175 100 175 Z"
+          fill="#EC4899"/>
+    <path d="M 50 50 Q 60 40 70 50" stroke="#FBCFE8" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
+    ${kawaiiFace(100, 95, 0.95)}
+  `),
+  'shape-rectangle': () => createSVG(220, 160, null, `
+    <rect x="10" y="15" width="200" height="130" rx="20" fill="#10B981"/>
+    <circle cx="50" cy="50" r="16" fill="#A7F3D0" opacity="0.6"/>
+    ${kawaiiFace(110, 80, 1)}
+  `),
+  'shape-oval': () => createSVG(200, 160, null, `
+    <ellipse cx="100" cy="80" rx="90" ry="65" fill="#8B5CF6"/>
+    <ellipse cx="65" cy="55" rx="18" ry="12" fill="#DDD6FE" opacity="0.6"/>
+    ${kawaiiFace(100, 80, 1)}
+  `),
+  'shape-diamond': () => createSVG(200, 200, null, `
+    <path d="M 100 10 L 180 100 L 100 190 L 20 100 Z" fill="#06B6D4" stroke="#22D3EE" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M 60 70 L 100 30" stroke="#CFFAFE" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+    ${kawaiiFace(100, 100, 1)}
+  `),
+  'color-red': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#EF4444"/>
+    <circle cx="70" cy="70" r="22" fill="#FCA5A5" opacity="0.7"/>
+    <circle cx="130" cy="110" r="25" fill="#DC2626" opacity="0.5"/>
+  `),
+  'color-blue': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#3B82F6"/>
+    <circle cx="75" cy="75" r="22" fill="#93C5FD" opacity="0.7"/>
+    <circle cx="125" cy="115" r="28" fill="#1D4ED8" opacity="0.5"/>
+  `),
+  'color-yellow': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#FBBF24"/>
+    <circle cx="70" cy="80" r="20" fill="#FDE047" opacity="0.8"/>
+    <circle cx="130" cy="110" r="25" fill="#F59E0B" opacity="0.5"/>
+  `),
+  'color-green': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#22C55E"/>
+    <circle cx="75" cy="75" r="22" fill="#86EFAC" opacity="0.7"/>
+    <circle cx="125" cy="115" r="28" fill="#15803D" opacity="0.5"/>
+  `),
+  'color-orange': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#F97316"/>
+    <circle cx="70" cy="75" r="20" fill="#FDBA74" opacity="0.7"/>
+    <circle cx="130" cy="115" r="25" fill="#EA580C" opacity="0.5"/>
+  `),
+  'color-purple': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#A855F7"/>
+    <circle cx="75" cy="75" r="22" fill="#D8B4FE" opacity="0.7"/>
+    <circle cx="125" cy="115" r="28" fill="#7E22CE" opacity="0.5"/>
+  `),
+  'color-pink': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#F472B6"/>
+    <circle cx="70" cy="75" r="20" fill="#FBCFE8" opacity="0.7"/>
+    <circle cx="130" cy="115" r="25" fill="#DB2777" opacity="0.5"/>
+  `),
+  'color-brown': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#8D5B4C"/>
+    <circle cx="75" cy="75" r="22" fill="#B4846C" opacity="0.7"/>
+    <circle cx="125" cy="115" r="28" fill="#6D4534" opacity="0.5"/>
+  `),
+  'color-black': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#334155"/>
+    <circle cx="75" cy="75" r="22" fill="#475569" opacity="0.7"/>
+    <circle cx="125" cy="115" r="28" fill="#1E293B" opacity="0.8"/>
+  `),
+  'color-white': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="80" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="5"/>
+    <circle cx="70" cy="75" r="20" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="130" cy="115" r="25" fill="#E2E8F0" opacity="0.8"/>
+  `),
+  'dog': () => createSVG(200, 200, null, `
+    <ellipse cx="60" cy="85" rx="18" ry="35" fill="#D97706" transform="rotate(-15 60 85)"/>
+    <ellipse cx="140" cy="85" rx="18" ry="35" fill="#D97706" transform="rotate(15 140 85)"/>
+    <circle cx="100" cy="105" r="55" fill="#FBBF24"/>
+    <circle cx="82" cy="98" r="6" fill="#1E293B"/>
+    <circle cx="118" cy="98" r="6" fill="#1E293B"/>
+    <ellipse cx="100" cy="115" rx="10" ry="8" fill="#334155"/>
+    <path d="M 90 125 Q 100 135 110 125" stroke="#EF4444" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M 100 128 Q 100 142 105 138" stroke="#EF4444" stroke-width="4" fill="#F87171"/>
+  `),
+  'cat': () => createSVG(200, 200, null, `
+    <polygon points="50,80 65,35 85,75" fill="#F472B6"/>
+    <polygon points="150,80 135,35 115,75" fill="#F472B6"/>
+    <circle cx="100" cy="110" r="52" fill="#FBCFE8"/>
+    <circle cx="82" cy="105" r="6" fill="#1E293B"/>
+    <circle cx="118" cy="105" r="6" fill="#1E293B"/>
+    <polygon points="95,115 105,115 100,122" fill="#EC4899"/>
+    <path d="M 90 124 Q 100 130 110 124" stroke="#DB2777" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <line x1="55" y1="115" x2="80" y2="118" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="145" y1="115" x2="120" y2="118" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+  `),
+  'cow': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="55" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+    <ellipse cx="60" cy="65" rx="14" ry="8" fill="#F472B6" transform="rotate(-30 60 65)"/>
+    <ellipse cx="140" cy="65" rx="14" ry="8" fill="#F472B6" transform="rotate(30 140 65)"/>
+    <circle cx="75" cy="85" r="14" fill="#334155"/>
+    <circle cx="120" cy="80" r="10" fill="#334155"/>
+    <circle cx="82" cy="95" r="5" fill="#1E293B"/>
+    <circle cx="118" cy="95" r="5" fill="#1E293B"/>
+    <ellipse cx="100" cy="125" rx="30" ry="18" fill="#FBCFE8"/>
+    <circle cx="90" cy="125" r="3.5" fill="#DB2777"/>
+    <circle cx="110" cy="125" r="3.5" fill="#DB2777"/>
+  `),
+  'duck': () => createSVG(200, 200, null, `
+    <circle cx="90" cy="100" r="45" fill="#FBBF24"/>
+    <ellipse cx="130" cy="125" rx="45" ry="30" fill="#FBBF24"/>
+    <circle cx="80" cy="90" r="5.5" fill="#1E293B"/>
+    <path d="M 45 102 Q 30 105 45 115 Z" fill="#F97316"/>
+    <ellipse cx="120" cy="125" rx="20" ry="12" fill="#F59E0B"/>
+  `),
+  'lion': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="68" fill="#EA580C"/>
+    <circle cx="100" cy="100" r="48" fill="#FBBF24"/>
+    <circle cx="82" cy="95" r="5.5" fill="#1E293B"/>
+    <circle cx="118" cy="95" r="5.5" fill="#1E293B"/>
+    <polygon points="94,106 106,106 100,114" fill="#78350F"/>
+    <path d="M 90 120 Q 100 128 110 120" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  `),
+  'elephant': () => createSVG(200, 200, null, `
+    <circle cx="65" cy="85" r="28" fill="#A5B4FC"/>
+    <circle cx="135" cy="85" r="28" fill="#A5B4FC"/>
+    <circle cx="100" cy="100" r="50" fill="#818CF8"/>
+    <circle cx="82" cy="92" r="5" fill="#1E293B"/>
+    <circle cx="118" cy="92" r="5" fill="#1E293B"/>
+    <path d="M 95 105 Q 100 145 115 135" stroke="#818CF8" stroke-width="14" fill="none" stroke-linecap="round"/>
+  `),
+  'fish': () => createSVG(200, 200, null, `
+    <ellipse cx="90" cy="100" rx="55" ry="40" fill="#06B6D4"/>
+    <polygon points="135,100 175,65 175,135" fill="#0891B2"/>
+    <circle cx="65" cy="90" r="5.5" fill="#1E293B"/>
+    <circle cx="63" cy="88" r="1.5" fill="#FFFFFF"/>
+    <ellipse cx="95" cy="105" rx="14" ry="8" fill="#22D3EE" opacity="0.8"/>
+    <path d="M 45 105 Q 40 100 45 95" stroke="#0891B2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="45" cy="70" r="6" fill="#A5F3FC" opacity="0.6"/>
+    <circle cx="35" cy="55" r="4" fill="#A5F3FC" opacity="0.6"/>
+  `),
+  'monkey': () => createSVG(200, 200, null, `
+    <circle cx="55" cy="90" r="18" fill="#B45309"/>
+    <circle cx="145" cy="90" r="18" fill="#B45309"/>
+    <circle cx="100" cy="100" r="48" fill="#92400E"/>
+    <ellipse cx="100" cy="108" rx="35" ry="28" fill="#FDE68A"/>
+    <circle cx="85" cy="98" r="5" fill="#1E293B"/>
+    <circle cx="115" cy="98" r="5" fill="#1E293B"/>
+    <path d="M 90 118 Q 100 126 110 118" stroke="#B45309" stroke-width="3" fill="none" stroke-linecap="round"/>
+  `),
+  'bird': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="45" fill="#0EA5E9"/>
+    <polygon points="140,95 165,100 140,110" fill="#F97316"/>
+    <circle cx="115" cy="90" r="5" fill="#1E293B"/>
+    <path d="M 75 95 Q 60 115 85 125" stroke="#0284C7" stroke-width="8" fill="none" stroke-linecap="round"/>
+  `),
+  'frog': () => createSVG(200, 200, null, `
+    <circle cx="70" cy="75" r="18" fill="#22C55E"/>
+    <circle cx="130" cy="75" r="18" fill="#22C55E"/>
+    <circle cx="70" cy="75" r="7" fill="#1E293B"/>
+    <circle cx="130" cy="75" r="7" fill="#1E293B"/>
+    <ellipse cx="100" cy="115" rx="55" ry="42" fill="#4ADE80"/>
+    <path d="M 75 120 Q 100 135 125 120" stroke="#15803D" stroke-width="4" fill="none" stroke-linecap="round"/>
+  `),
+  'pig': () => createSVG(200, 200, null, `
+    <polygon points="60,65 75,40 85,65" fill="#F472B6"/>
+    <polygon points="140,65 125,40 115,65" fill="#F472B6"/>
+    <circle cx="100" cy="100" r="50" fill="#F9A8D4"/>
+    <circle cx="80" cy="90" r="5" fill="#1E293B"/>
+    <circle cx="120" cy="90" r="5" fill="#1E293B"/>
+    <ellipse cx="100" cy="112" rx="22" ry="14" fill="#F472B6"/>
+    <circle cx="92" cy="112" r="3.5" fill="#DB2777"/>
+    <circle cx="108" cy="112" r="3.5" fill="#DB2777"/>
+  `),
+  'sheep': () => createSVG(200, 200, null, `
+    <circle cx="70" cy="70" r="25" fill="#F1F5F9"/>
+    <circle cx="130" cy="70" r="25" fill="#F1F5F9"/>
+    <circle cx="100" cy="60" r="25" fill="#F1F5F9"/>
+    <circle cx="65" cy="115" r="25" fill="#F1F5F9"/>
+    <circle cx="135" cy="115" r="25" fill="#F1F5F9"/>
+    <circle cx="100" cy="120" r="35" fill="#F1F5F9"/>
+    <ellipse cx="100" cy="100" rx="30" ry="24" fill="#334155"/>
+    <circle cx="90" cy="95" r="4" fill="#FFFFFF"/>
+    <circle cx="110" cy="95" r="4" fill="#FFFFFF"/>
+  `),
+  'horse': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="110" rx="42" ry="50" fill="#A16207"/>
+    <polygon points="80,60 90,35 98,60" fill="#78350F"/>
+    <polygon points="120,60 110,35 102,60" fill="#78350F"/>
+    <circle cx="85" cy="95" r="5" fill="#1E293B"/>
+    <circle cx="115" cy="95" r="5" fill="#1E293B"/>
+    <ellipse cx="100" cy="130" rx="26" ry="16" fill="#CA8A04"/>
+    <circle cx="90" cy="130" r="3.5" fill="#78350F"/>
+    <circle cx="110" cy="130" r="3.5" fill="#78350F"/>
+  `),
+  'apple': () => createSVG(200, 200, null, `
+    <path d="M 100 25 Q 110 15 115 30" stroke="#16A34A" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="115" cy="28" rx="14" ry="8" fill="#4ADE80"/>
+    <circle cx="78" cy="105" r="50" fill="#EF4444"/>
+    <circle cx="122" cy="105" r="50" fill="#EF4444"/>
+    <circle cx="65" cy="85" r="16" fill="#FCA5A5" opacity="0.6"/>
+  `),
+  'ball': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="75" fill="#3B82F6"/>
+    <path d="M 35 100 Q 100 50 165 100" stroke="#1D4ED8" stroke-width="8" fill="none"/>
+    <path d="M 35 100 Q 100 150 165 100" stroke="#93C5FD" stroke-width="8" fill="none"/>
+    <circle cx="70" cy="70" r="15" fill="#DBEAFE" opacity="0.6"/>
+  `),
+  'cup': () => createSVG(200, 200, null, `
+    <path d="M 50 50 L 65 150 Q 100 165 135 150 L 150 50 Z" fill="#38BDF8"/>
+    <path d="M 140 70 Q 180 90 135 130" stroke="#0284C7" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <ellipse cx="100" cy="50" rx="50" ry="12" fill="#7DD3FC"/>
+  `),
+  'spoon': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="65" rx="35" ry="45" fill="#10B981"/>
+    <path d="M 95 105 L 95 175 Q 100 185 105 175 L 105 105 Z" fill="#059669"/>
+    <ellipse cx="92" cy="55" rx="8" ry="15" fill="#A7F3D0" opacity="0.7"/>
+  `),
+  'shoes': () => createSVG(200, 200, null, `
+    <path d="M 30 130 Q 30 90 70 90 L 100 110 L 140 110 Q 170 110 170 140 Q 170 155 130 155 L 45 155 Q 30 155 30 130 Z" fill="#EC4899"/>
+    <rect x="35" y="145" width="130" height="10" rx="4" fill="#FFFFFF"/>
+    <line x1="80" y1="100" x2="100" y2="100" stroke="#FCE7F3" stroke-width="4" stroke-linecap="round"/>
+    <line x1="85" y1="110" x2="105" y2="110" stroke="#FCE7F3" stroke-width="4" stroke-linecap="round"/>
+  `),
+  'bed': () => createSVG(200, 200, null, `
+    <rect x="25" y="60" width="15" height="100" rx="5" fill="#78350F"/>
+    <rect x="160" y="80" width="15" height="80" rx="5" fill="#78350F"/>
+    <rect x="35" y="100" width="130" height="45" rx="8" fill="#8B5CF6"/>
+    <rect x="40" y="85" width="35" height="25" rx="6" fill="#F8FAFC"/>
+  `),
+  'clock': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="75" fill="#F59E0B" stroke="#D97706" stroke-width="8"/>
+    <circle cx="100" cy="100" r="60" fill="#FEF3C7"/>
+    <circle cx="100" cy="100" r="6" fill="#1E293B"/>
+    <line x1="100" y1="100" x2="100" y2="55" stroke="#1E293B" stroke-width="6" stroke-linecap="round"/>
+    <line x1="100" y1="100" x2="135" y2="100" stroke="#EF4444" stroke-width="4" stroke-linecap="round"/>
+  `),
+  'book': () => createSVG(200, 200, null, `
+    <path d="M 30 60 Q 100 45 100 65 L 100 155 Q 100 140 30 150 Z" fill="#06B6D4"/>
+    <path d="M 170 60 Q 100 45 100 65 L 100 155 Q 100 140 170 150 Z" fill="#22D3EE"/>
+    <line x1="100" y1="65" x2="100" y2="155" stroke="#0891B2" stroke-width="4"/>
+  `),
+  'car': () => createSVG(200, 200, null, `
+    <path d="M 30 120 Q 30 100 50 100 L 70 70 Q 75 60 90 60 L 135 60 Q 150 60 155 75 L 170 100 Q 185 100 185 125 L 185 140 L 30 140 Z" fill="#EF4444"/>
+    <rect x="75" y="70" width="35" height="25" rx="4" fill="#93C5FD"/>
+    <rect x="120" y="70" width="30" height="25" rx="4" fill="#93C5FD"/>
+    <circle cx="65" cy="145" r="18" fill="#1E293B"/>
+    <circle cx="65" cy="145" r="7" fill="#CBD5E1"/>
+    <circle cx="150" cy="145" r="18" fill="#1E293B"/>
+    <circle cx="150" cy="145" r="7" fill="#CBD5E1"/>
+  `),
+  'toothbrush': () => createSVG(200, 200, null, `
+    <rect x="85" y="20" width="30" height="150" rx="15" fill="#14B8A6"/>
+    <rect x="90" y="25" width="20" height="45" rx="5" fill="#FFFFFF"/>
+    <line x1="95" y1="35" x2="105" y2="35" stroke="#0D9488" stroke-width="3"/>
+    <line x1="95" y1="45" x2="105" y2="45" stroke="#0D9488" stroke-width="3"/>
+    <line x1="95" y1="55" x2="105" y2="55" stroke="#0D9488" stroke-width="3"/>
+  `),
+  'hat': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="140" rx="75" ry="20" fill="#EA580C"/>
+    <path d="M 50 135 Q 50 60 100 60 Q 150 60 150 135 Z" fill="#F97316"/>
+    <circle cx="100" cy="55" r="14" fill="#FDE047"/>
+  `),
+  'eyes': () => createSVG(200, 200, null, `
+    <ellipse cx="65" cy="100" rx="32" ry="24" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+    <circle cx="65" cy="100" r="14" fill="#3B82F6"/>
+    <circle cx="62" cy="96" r="5" fill="#FFFFFF"/>
+    <ellipse cx="135" cy="100" rx="32" ry="24" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+    <circle cx="135" cy="100" r="14" fill="#3B82F6"/>
+    <circle cx="132" cy="96" r="5" fill="#FFFFFF"/>
+  `),
+  'nose': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="50" fill="#FDA4AF"/>
+    <ellipse cx="100" cy="105" rx="22" ry="16" fill="#F43F5E"/>
+    <circle cx="92" cy="105" r="4" fill="#9F1239"/>
+    <circle cx="108" cy="105" r="4" fill="#9F1239"/>
+  `),
+  'mouth': () => createSVG(200, 200, null, `
+    <path d="M 30 90 Q 100 160 170 90 Q 100 110 30 90 Z" fill="#EF4444"/>
+    <path d="M 50 96 Q 100 115 150 96" stroke="#FFFFFF" stroke-width="10" fill="none" stroke-linecap="round"/>
+  `),
+  'ears': () => createSVG(200, 200, null, `
+    <path d="M 80 50 Q 40 70 50 120 Q 60 160 80 150 Z" fill="#FBBF24"/>
+    <path d="M 120 50 Q 160 70 150 120 Q 140 160 120 150 Z" fill="#FBBF24"/>
+    <ellipse cx="65" cy="100" rx="10" ry="20" fill="#F59E0B"/>
+    <ellipse cx="135" cy="100" rx="10" ry="20" fill="#F59E0B"/>
+  `),
+  'hands': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="120" r="45" fill="#34D399"/>
+    <rect x="65" y="55" width="12" height="40" rx="6" fill="#34D399"/>
+    <rect x="82" y="45" width="12" height="50" rx="6" fill="#34D399"/>
+    <rect x="99" y="40" width="12" height="55" rx="6" fill="#34D399"/>
+    <rect x="116" y="50" width="12" height="45" rx="6" fill="#34D399"/>
+    <rect x="130" y="75" width="12" height="30" rx="6" fill="#34D399" transform="rotate(30 130 75)"/>
+  `),
+  'feet': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="120" rx="35" ry="45" fill="#A78BFA"/>
+    <circle cx="75" cy="65" r="10" fill="#A78BFA"/>
+    <circle cx="92" cy="60" r="8" fill="#A78BFA"/>
+    <circle cx="106" cy="62" r="7" fill="#A78BFA"/>
+    <circle cx="118" cy="67" r="6" fill="#A78BFA"/>
+    <circle cx="128" cy="74" r="5" fill="#A78BFA"/>
+  `),
+  'tummy': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="75" fill="#FDBA74"/>
+    <circle cx="100" cy="105" r="6" fill="#C2410C"/>
+    <path d="M 85 90 Q 100 80 115 90" stroke="#EA580C" stroke-width="3" fill="none" stroke-linecap="round"/>
+  `),
+  'head': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="105" r="65" fill="#67E8F9"/>
+    <path d="M 50 80 Q 100 40 150 80" stroke="#0891B2" stroke-width="12" fill="none" stroke-linecap="round"/>
+    ${kawaiiFace(100, 105, 1)}
+  `),
+  'wave': () => createSVG(200, 200, null, `
+    <circle cx="80" cy="90" r="40" fill="#FBBF24"/>
+    <ellipse cx="120" cy="100" rx="35" ry="45" fill="#FBBF24"/>
+    <path d="M 115 75 L 145 55 L 155 80" stroke="#F59E0B" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    ${kawaiiFace(80, 90, 0.9)}
+  `),
+  'please': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="75" fill="#C084FC"/>
+    <path d="M 100 35 L 110 65 L 140 75 L 115 95 L 125 125 L 100 105 L 75 125 L 85 95 L 60 75 L 90 65 Z" fill="#FDE047"/>
+    ${kawaiiFace(100, 105, 0.9)}
+  `),
+  'sun': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="50" fill="#FBBF24"/>
+    ${[0, 45, 90, 135, 180, 225, 270, 315].map(angle => {
+      const rad = (angle * Math.PI) / 180;
+      const x1 = 100 + Math.cos(rad) * 60;
+      const y1 = 100 + Math.sin(rad) * 60;
+      const x2 = 100 + Math.cos(rad) * 85;
+      const y2 = 100 + Math.sin(rad) * 85;
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#F59E0B" stroke-width="8" stroke-linecap="round"/>`;
+    }).join('')}
+    ${kawaiiFace(100, 100, 1)}
+  `),
+  'moon': () => createSVG(200, 200, null, `
+    <path d="M 140 40 Q 95 50 75 90 Q 60 130 85 165 Q 120 190 155 175 Q 125 155 115 125 Q 105 85 140 40 Z"
+          fill="#818CF8"/>
+    <circle cx="105" cy="80" r="7" fill="#C7D2FE" opacity="0.8"/>
+    <circle cx="120" cy="120" r="6" fill="#C7D2FE" opacity="0.7"/>
+    ${kawaiiFace(95, 115, 0.8)}
+  `),
+  'giraffe': () => createSVG(200, 200, null, `
+    <rect x="88" y="50" width="24" height="100" rx="10" fill="#FBBF24"/>
+    <circle cx="100" cy="50" r="30" fill="#FBBF24"/>
+    <circle cx="85" cy="45" r="4" fill="#1E293B"/>
+    <circle cx="115" cy="45" r="4" fill="#1E293B"/>
+    <circle cx="95" cy="80" r="7" fill="#B45309"/>
+    <circle cx="105" cy="110" r="8" fill="#B45309"/>
+  `),
+  'igloo': () => createSVG(200, 200, null, `
+    <path d="M 30 150 Q 100 40 170 150 Z" fill="#BAE6FD" stroke="#38BDF8" stroke-width="5"/>
+    <path d="M 80 150 Q 100 110 120 150 Z" fill="#0284C7"/>
+  `),
+  'jellyfish': () => createSVG(200, 200, null, `
+    <path d="M 40 100 Q 100 30 160 100 Z" fill="#C084FC"/>
+    <path d="M 60 100 Q 50 150 70 170" stroke="#A855F7" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M 85 100 Q 95 150 85 175" stroke="#A855F7" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M 115 100 Q 105 150 115 175" stroke="#A855F7" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M 140 100 Q 150 150 130 170" stroke="#A855F7" stroke-width="4" fill="none" stroke-linecap="round"/>
+    ${kawaiiFace(100, 80, 0.9)}
+  `),
+  'kite': () => createSVG(200, 200, null, `
+    <path d="M 100 30 L 160 90 L 100 150 L 40 90 Z" fill="#F97316"/>
+    <line x1="100" y1="30" x2="100" y2="150" stroke="#FFFFFF" stroke-width="3"/>
+    <line x1="40" y1="90" x2="160" y2="90" stroke="#FFFFFF" stroke-width="3"/>
+    <path d="M 100 150 Q 130 175 100 190" stroke="#EA580C" stroke-width="3" fill="none"/>
+  `),
+  'nest': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="130" rx="70" ry="35" fill="#78350F"/>
+    <ellipse cx="80" cy="115" rx="14" ry="18" fill="#67E8F9"/>
+    <ellipse cx="105" cy="110" rx="14" ry="18" fill="#67E8F9"/>
+    <ellipse cx="125" cy="118" rx="14" ry="18" fill="#67E8F9"/>
+  `),
+  'owl': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="110" rx="55" ry="60" fill="#818CF8"/>
+    <circle cx="75" cy="95" r="20" fill="#FFFFFF"/>
+    <circle cx="125" cy="95" r="20" fill="#FFFFFF"/>
+    <circle cx="75" cy="95" r="8" fill="#1E293B"/>
+    <circle cx="125" cy="95" r="8" fill="#1E293B"/>
+    <polygon points="95,108 105,108 100,118" fill="#F59E0B"/>
+  `),
+  'penguin': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="110" rx="50" ry="65" fill="#1E293B"/>
+    <ellipse cx="100" cy="120" rx="35" ry="48" fill="#FFFFFF"/>
+    <circle cx="85" cy="85" r="4" fill="#1E293B"/>
+    <circle cx="115" cy="85" r="4" fill="#1E293B"/>
+    <polygon points="95,95 105,95 100,105" fill="#F97316"/>
+  `),
+  'queen': () => createSVG(200, 200, null, `
+    <polygon points="40,110 40,60 70,85 100,45 130,85 160,60 160,110" fill="#FBBF24" stroke="#F59E0B" stroke-width="4"/>
+    <circle cx="40" cy="55" r="6" fill="#EC4899"/>
+    <circle cx="100" cy="40" r="8" fill="#3B82F6"/>
+    <circle cx="160" cy="55" r="6" fill="#EC4899"/>
+    <rect x="40" y="110" width="120" height="20" rx="4" fill="#EAB308"/>
+  `),
+  'rainbow': () => createSVG(200, 200, null, `
+    <path d="M 30 160 A 70 70 0 0 1 170 160" stroke="#EF4444" stroke-width="12" fill="none"/>
+    <path d="M 42 160 A 58 58 0 0 1 158 160" stroke="#F59E0B" stroke-width="12" fill="none"/>
+    <path d="M 54 160 A 46 46 0 0 1 146 160" stroke="#10B981" stroke-width="12" fill="none"/>
+    <path d="M 66 160 A 34 34 0 0 1 134 160" stroke="#3B82F6" stroke-width="12" fill="none"/>
+    <path d="M 78 160 A 22 22 0 0 1 122 160" stroke="#8B5CF6" stroke-width="12" fill="none"/>
+  `),
+  'tree': () => createSVG(200, 200, null, `
+    <rect x="88" y="120" width="24" height="60" rx="4" fill="#78350F"/>
+    <circle cx="100" cy="80" r="50" fill="#22C55E"/>
+    <circle cx="75" cy="95" r="30" fill="#16A34A"/>
+    <circle cx="125" cy="95" r="30" fill="#16A34A"/>
+  `),
+  'umbrella': () => createSVG(200, 200, null, `
+    <path d="M 30 110 Q 100 20 170 110 Z" fill="#A855F7"/>
+    <line x1="100" y1="30" x2="100" y2="160" stroke="#6B21A8" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 100 160 Q 100 180 85 170" stroke="#6B21A8" stroke-width="6" fill="none" stroke-linecap="round"/>
+  `),
+  'violin': () => createSVG(200, 200, null, `
+    <ellipse cx="100" cy="130" rx="45" ry="35" fill="#D97706"/>
+    <ellipse cx="100" cy="80" rx="35" ry="25" fill="#D97706"/>
+    <rect x="94" y="20" width="12" height="150" rx="4" fill="#78350F"/>
+    <circle cx="100" cy="110" r="10" fill="#1E293B"/>
+  `),
+  'whale': () => createSVG(200, 200, null, `
+    <ellipse cx="90" cy="115" rx="65" ry="40" fill="#0284C7"/>
+    <polygon points="145,115 180,95 180,135" fill="#0369A1"/>
+    <circle cx="60" cy="105" r="5" fill="#1E293B"/>
+    <path d="M 70 70 Q 75 50 65 40" stroke="#38BDF8" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M 75 70 Q 85 50 95 40" stroke="#38BDF8" stroke-width="4" fill="none" stroke-linecap="round"/>
+  `),
+  'xylophone': () => createSVG(200, 200, null, `
+    <rect x="30" y="60" width="22" height="110" rx="4" fill="#EF4444"/>
+    <rect x="58" y="70" width="22" height="100" rx="4" fill="#F59E0B"/>
+    <rect x="86" y="80" width="22" height="90" rx="4" fill="#10B981"/>
+    <rect x="114" y="90" width="22" height="80" rx="4" fill="#3B82F6"/>
+    <rect x="142" y="100" width="22" height="70" rx="4" fill="#8B5CF6"/>
+  `),
+  'yoyo': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="110" r="55" fill="#FBBF24" stroke="#F59E0B" stroke-width="8"/>
+    <circle cx="100" cy="110" r="30" fill="#EA580C"/>
+    <path d="M 100 55 Q 100 20 80 20" stroke="#CBD5E1" stroke-width="4" fill="none"/>
+  `),
+  'zebra': () => createSVG(200, 200, null, `
+    <circle cx="100" cy="100" r="52" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="3"/>
+    <line x1="60" y1="80" x2="85" y2="85" stroke="#1E293B" stroke-width="6" stroke-linecap="round"/>
+    <line x1="55" y1="105" x2="80" y2="105" stroke="#1E293B" stroke-width="6" stroke-linecap="round"/>
+    <line x1="140" y1="80" x2="115" y2="85" stroke="#1E293B" stroke-width="6" stroke-linecap="round"/>
+    <line x1="145" y1="105" x2="120" y2="105" stroke="#1E293B" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="85" cy="95" r="5" fill="#1E293B"/>
+    <circle cx="115" cy="95" r="5" fill="#1E293B"/>
+    <ellipse cx="100" cy="122" rx="20" ry="12" fill="#475569"/>
+  `)
+};
+
+function getSVG(svgKey, themeColor = '#64748B') {
+  const generator = SVG_LIBRARY[svgKey];
+  if (generator) {
+    return generator(themeColor);
+  }
+  return SVG_LIBRARY.default(themeColor);
+}
+
+// 3. Audio Synthesizer
+class SoundSynthesizer {
+  constructor() {
+    this.ctx = null;
+    this.enabled = true;
+  }
+
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+
+  setEnabled(state) { this.enabled = state; }
+
+  playPop() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(550, now);
+    osc.frequency.exponentialRampToValueAtTime(120, now + 0.09);
+    gain.gain.setValueAtTime(0.4, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.1);
+  }
+
+  playBubble() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(800, now + 0.14);
+    gain.gain.setValueAtTime(0.35, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.15);
+  }
+
+  playTwinkle() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((freq, i) => {
+      const now = this.ctx.currentTime + (i * 0.06);
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.32);
+    });
+  }
+
+  playBoing() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(140, now);
+    osc.frequency.linearRampToValueAtTime(320, now + 0.12);
+    osc.frequency.linearRampToValueAtTime(180, now + 0.28);
+    gain.gain.setValueAtTime(0.35, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.32);
+  }
+
+  playCheer() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    const chord = [523.25, 659.25, 783.99, 1046.50];
+    chord.forEach((freq) => {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.65);
+    });
+  }
+}
+const synthesizer = new SoundSynthesizer();
+
+// 4. Speech Manager
+class SpeechManager {
+  constructor() {
+    this.enabled = true;
+    this.synth = window.speechSynthesis || null;
+  }
+
+  setEnabled(state) {
+    this.enabled = state;
+    if (!state && this.synth) this.synth.cancel();
+  }
+
+  speak(text) {
+    if (!this.enabled || !this.synth || !text) return;
+    this.synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.88;
+    utterance.pitch = 1.15;
+    utterance.lang = 'en-US';
+    this.synth.speak(utterance);
+  }
+}
+const speechManager = new SpeechManager();
+
+// 5. Confetti Engine
+class ConfettiEngine {
+  constructor(canvasId = 'confetti-canvas') {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+    this.particles = [];
+    this.colors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#9B5DE5', '#F15BB5'];
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    this.loop();
+  }
+
+  resize() {
+    if (!this.canvas) return;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  burst(x, y, count = 60) {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 4 + Math.random() * 9;
+      this.particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 2,
+        size: 8 + Math.random() * 8,
+        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 12,
+        alpha: 1,
+        life: 0.96 + Math.random() * 0.03
+      });
+    }
+  }
+
+  loop() {
+    if (this.ctx && this.canvas) {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.25; // gravity
+        p.rotation += p.rotSpeed;
+        p.alpha *= p.life;
+
+        this.ctx.save();
+        this.ctx.globalAlpha = p.alpha;
+        this.ctx.translate(p.x, p.y);
+        this.ctx.rotate((p.rotation * Math.PI) / 180);
+        this.ctx.fillStyle = p.color;
+        this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        this.ctx.restore();
+
+        if (p.alpha < 0.05 || p.y > this.canvas.height + 50) {
+          this.particles.splice(i, 1);
+        }
+      }
+    }
+    requestAnimationFrame(() => this.loop());
+  }
+}
+const confettiEngine = new ConfettiEngine();
+
+// 6. Flashcard Component
+class FlashcardComponent {
+  constructor(containerId, options = {}) {
+    this.container = document.getElementById(containerId);
+    this.onNext = options.onNext || (() => {});
+    this.onPrev = options.onPrev || (() => {});
+    this.currentItem = null;
+  }
+
+  render(item) {
+    if (!this.container || !item) return;
+    this.currentItem = item;
+
+    this.container.innerHTML = `
+      <div class="flashcard-stage">
+        <button type="button" class="nav-arrow-btn" id="btn-card-prev" title="Previous Item">‹</button>
+        <div class="flashcard animate-bounce-in" id="active-flashcard" style="border-color: ${item.themeColor}33;">
+          <div class="card-badge" style="background: ${item.themeColor}22; color: ${item.themeColor};">
+            <span>✨ Tap Card!</span>
+          </div>
+          <div class="card-graphic">
+            <div class="card-svg-container">
+              ${getSVG(item.svgKey, item.themeColor)}
+            </div>
+          </div>
+          <div class="card-text-container">
+            <h2 class="card-title" style="color: ${item.themeColor};">${item.label}</h2>
+            <div class="card-subtitle">${item.subLabel}</div>
+          </div>
+          <div class="card-action-prompt">
+            <span>🔊 Tap to Speak</span>
+          </div>
+        </div>
+        <button type="button" class="nav-arrow-btn" id="btn-card-next" title="Next Item">›</button>
+      </div>
+    `;
+
+    this.attachEvents();
+  }
+
+  attachEvents() {
+    document.getElementById('btn-card-prev')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      synthesizer.playBubble();
+      this.onPrev();
+    });
+
+    document.getElementById('btn-card-next')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      synthesizer.playBubble();
+      this.onNext();
+    });
+
+    const card = document.getElementById('active-flashcard');
+    card?.addEventListener('pointerdown', (e) => this.handleCardInteraction(e));
+  }
+
+  handleCardInteraction(e) {
+    if (!this.currentItem) return;
+    const card = document.getElementById('active-flashcard');
+    if (card) {
+      card.classList.remove('animate-squish');
+      void card.offsetWidth;
+      card.classList.add('animate-squish');
+    }
+
+    synthesizer.playPop();
+    speechManager.speak(this.currentItem.speechText || this.currentItem.label);
+
+    const x = e?.clientX || window.innerWidth / 2;
+    const y = e?.clientY || window.innerHeight / 2;
+    confettiEngine.burst(x, y, 25);
+  }
+}
+
+// 7. Quiz Component ("Find It!")
+class QuizComponent {
+  constructor(containerId, options = {}) {
+    this.container = document.getElementById(containerId);
+    this.onScore = options.onScore || (() => {});
+    this.targetItem = null;
+    this.choices = [];
+    this.isLocked = false;
+  }
+
+  startNewRound(allItems, categoryItems) {
+    if (!this.container || !categoryItems || categoryItems.length === 0) return;
+    this.isLocked = false;
+
+    const targetIndex = Math.floor(Math.random() * categoryItems.length);
+    this.targetItem = categoryItems[targetIndex];
+
+    const distractors = [];
+    const pool = categoryItems.length >= 3 ? categoryItems : allItems;
+
+    while (distractors.length < 2) {
+      const candidate = pool[Math.floor(Math.random() * pool.length)];
+      if (candidate.id !== this.targetItem.id && !distractors.find(d => d.id === candidate.id)) {
+        distractors.push(candidate);
+      }
+    }
+
+    this.choices = [this.targetItem, ...distractors].sort(() => Math.random() - 0.5);
+    this.render();
+    this.speakPrompt();
+  }
+
+  render() {
+    if (!this.container || !this.targetItem) return;
+
+    this.container.innerHTML = `
+      <div class="quiz-stage">
+        <div class="quiz-prompt-card" id="quiz-prompt">
+          <button type="button" class="quiz-speaker-btn" id="btn-repeat-prompt">🔊</button>
+          <div class="quiz-prompt-content">
+            <span class="quiz-prompt-sub">Can you find?</span>
+            <h2 class="quiz-prompt-title" style="color: ${this.targetItem.themeColor};">
+              ${this.targetItem.label} (${this.targetItem.subLabel})
+            </h2>
+          </div>
+        </div>
+        <div class="quiz-grid">
+          ${this.choices.map((item, index) => `
+            <div class="quiz-choice-card" data-id="${item.id}" id="choice-${index}" style="border-color: ${item.themeColor}22;">
+              <div class="quiz-choice-svg">
+                ${getSVG(item.svgKey, item.themeColor)}
+              </div>
+              <div class="quiz-choice-label" style="color: ${item.themeColor};">
+                ${item.label}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    this.attachEvents();
+  }
+
+  speakPrompt() {
+    if (!this.targetItem) return;
+    speechManager.speak(`Can you find the ${this.targetItem.label}? ${this.targetItem.subLabel}`);
+  }
+
+  attachEvents() {
+    document.getElementById('quiz-prompt')?.addEventListener('click', () => {
+      synthesizer.playBubble();
+      this.speakPrompt();
+    });
+
+    const cards = this.container.querySelectorAll('.quiz-choice-card');
+    cards.forEach(card => {
+      card.addEventListener('pointerdown', (e) => {
+        const itemId = card.getAttribute('data-id');
+        this.handleChoice(itemId, card, e);
+      });
+    });
+  }
+
+  handleChoice(selectedId, cardElement, event) {
+    if (this.isLocked) return;
+
+    if (selectedId === this.targetItem.id) {
+      this.isLocked = true;
+      cardElement.classList.add('correct');
+      synthesizer.playCheer();
+      synthesizer.playTwinkle();
+
+      const rect = cardElement.getBoundingClientRect();
+      const burstX = event?.clientX ?? (rect.left + rect.width / 2);
+      const burstY = event?.clientY ?? (rect.top + rect.height / 2);
+      confettiEngine.burst(burstX, burstY, 70);
+
+      speechManager.speak(`Yay! You found the ${this.targetItem.label}! Great job!`);
+      this.onScore();
+
+      setTimeout(() => {
+        if (this.onAdvance) this.onAdvance();
+      }, 1800);
+    } else {
+      cardElement.classList.remove('incorrect');
+      void cardElement.offsetWidth;
+      cardElement.classList.add('incorrect');
+      synthesizer.playBoing();
+
+      const chosen = this.choices.find(c => c.id === selectedId);
+      speechManager.speak(`That's ${chosen ? chosen.label : 'that'}! Can you find the ${this.targetItem.label}?`);
+    }
+  }
+
+  setOnAdvance(cb) { this.onAdvance = cb; }
+}
+
+// 8. Toddler Keyboard Handler
+class ToddlerKeyboardHandler {
+  constructor(app) {
+    this.app = app;
+    window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+  }
+
+  handleKeyDown(e) {
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    const key = e.key.toLowerCase();
+
+    if (e.code === 'Space') {
+      e.preventDefault();
+      synthesizer.playTwinkle();
+      confettiEngine.burst(window.innerWidth / 2, window.innerHeight / 2, 40);
+      this.app.repeatActiveAudio();
+      return;
+    }
+
+    if (e.code === 'ArrowRight' || e.code === 'ArrowDown') {
+      e.preventDefault();
+      this.app.nextItem();
+      return;
+    }
+
+    if (e.code === 'ArrowLeft' || e.code === 'ArrowUp') {
+      e.preventDefault();
+      this.app.prevItem();
+      return;
+    }
+
+    if (key.length === 1 && key >= 'a' && key <= 'z') {
+      e.preventDefault();
+      this.app.jumpToLetter(key);
+      return;
+    }
+
+    if (key >= '1' && key <= '7') {
+      e.preventDefault();
+      this.app.selectCategoryByIndex(parseInt(key, 10) - 1);
+      return;
+    }
+
+    synthesizer.playPop();
+  }
+}
+
+// 9. Master App Controller
+class ToddlerApp {
+  constructor() {
+    this.state = {
+      activeCategory: 'letters',
+      activeMode: 'learn',
+      currentIndex: 0,
+      starsCount: 0,
+      soundEnabled: true,
+      speechEnabled: true
+    };
+
+    this.flashcard = new FlashcardComponent('flashcard-view', {
+      onNext: () => this.nextItem(),
+      onPrev: () => this.prevItem()
+    });
+
+    this.quiz = new QuizComponent('quiz-view', {
+      onScore: () => this.incrementStars()
+    });
+    this.quiz.setOnAdvance(() => this.nextQuizRound());
+
+    this.keyboard = new ToddlerKeyboardHandler(this);
+    this.init();
+  }
+
+  init() {
+    this.renderCategoryNav();
+    this.attachHeaderEvents();
+    this.attachWelcomeOverlay();
+    this.updateView();
+  }
+
+  getCurrentCategoryItems() {
+    return LEARNING_ITEMS.filter(item => item.categoryId === this.state.activeCategory);
+  }
+
+  getCurrentItem() {
+    const items = this.getCurrentCategoryItems();
+    return items[this.state.currentIndex] || items[0];
+  }
+
+  renderCategoryNav() {
+    const nav = document.getElementById('category-nav');
+    if (!nav) return;
+
+    nav.innerHTML = CATEGORIES.map(cat => {
+      const isActive = cat.id === this.state.activeCategory;
+      return `
+        <button type="button"
+                class="cat-btn ${isActive ? 'active' : ''}"
+                data-id="${cat.id}"
+                style="${isActive ? `background: ${cat.themeColor}; box-shadow: 0 8px 20px ${cat.themeColor}55;` : ''}">
+          <span class="cat-icon">${cat.icon}</span>
+          <span class="cat-label">${cat.label}</span>
+        </button>
+      `;
+    }).join('');
+
+    nav.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.selectCategory(btn.getAttribute('data-id'));
+      });
+    });
+  }
+
+  selectCategory(catId) {
+    if (this.state.activeCategory === catId) return;
+    synthesizer.playBubble();
+    this.state.activeCategory = catId;
+    this.state.currentIndex = 0;
+
+    const catObj = CATEGORIES.find(c => c.id === catId);
+    if (catObj && this.state.speechEnabled) {
+      speechManager.speak(`Let's explore ${catObj.label}!`);
+    }
+
+    this.renderCategoryNav();
+    this.updateView();
+  }
+
+  selectCategoryByIndex(index) {
+    if (index >= 0 && index < CATEGORIES.length) {
+      this.selectCategory(CATEGORIES[index].id);
+    }
+  }
+
+  nextItem() {
+    const items = this.getCurrentCategoryItems();
+    this.state.currentIndex = (this.state.currentIndex + 1) % items.length;
+    this.updateView();
+  }
+
+  prevItem() {
+    const items = this.getCurrentCategoryItems();
+    this.state.currentIndex = (this.state.currentIndex - 1 + items.length) % items.length;
+    this.updateView();
+  }
+
+  jumpToLetter(char) {
+    if (this.state.activeCategory !== 'letters') {
+      this.state.activeCategory = 'letters';
+      this.renderCategoryNav();
+    }
+    const items = this.getCurrentCategoryItems();
+    const index = items.findIndex(item => item.id === `letter-${char}`);
+    if (index !== -1) {
+      this.state.currentIndex = index;
+      this.setMode('learn');
+      this.updateView();
+      this.flashcard.handleCardInteraction();
+    }
+  }
+
+  repeatActiveAudio() {
+    if (this.state.activeMode === 'learn') {
+      this.flashcard.handleCardInteraction();
+    } else {
+      this.quiz.speakPrompt();
+    }
+  }
+
+  nextQuizRound() {
+    this.quiz.startNewRound(LEARNING_ITEMS, this.getCurrentCategoryItems());
+  }
+
+  incrementStars() {
+    this.state.starsCount += 1;
+    const numEl = document.getElementById('star-count-num');
+    const counterEl = document.getElementById('stars-counter');
+    if (numEl) numEl.textContent = this.state.starsCount;
+    if (counterEl) {
+      counterEl.classList.remove('pulse');
+      void counterEl.offsetWidth;
+      counterEl.classList.add('pulse');
+    }
+  }
+
+  setMode(mode) {
+    if (this.state.activeMode === mode) return;
+    synthesizer.playBubble();
+    this.state.activeMode = mode;
+
+    document.getElementById('btn-mode-learn')?.classList.toggle('active', mode === 'learn');
+    document.getElementById('btn-mode-quiz')?.classList.toggle('active', mode === 'quiz');
+
+    const flashcardView = document.getElementById('flashcard-view');
+    const quizView = document.getElementById('quiz-view');
+
+    if (mode === 'learn') {
+      if (flashcardView) flashcardView.hidden = false;
+      if (quizView) quizView.hidden = true;
+      this.updateView();
+    } else {
+      if (flashcardView) flashcardView.hidden = true;
+      if (quizView) quizView.hidden = false;
+      this.nextQuizRound();
+    }
+  }
+
+  updateView() {
+    if (this.state.activeMode === 'learn') {
+      this.flashcard.render(this.getCurrentItem());
+    } else {
+      this.nextQuizRound();
+    }
+  }
+
+  attachHeaderEvents() {
+    document.getElementById('btn-mode-learn')?.addEventListener('click', () => this.setMode('learn'));
+    document.getElementById('btn-mode-quiz')?.addEventListener('click', () => this.setMode('quiz'));
+
+    const btnSfx = document.getElementById('btn-toggle-sfx');
+    const sfxIcon = document.getElementById('sfx-icon');
+    btnSfx?.addEventListener('click', () => {
+      this.state.soundEnabled = !this.state.soundEnabled;
+      synthesizer.setEnabled(this.state.soundEnabled);
+      btnSfx.classList.toggle('active', this.state.soundEnabled);
+      btnSfx.classList.toggle('muted', !this.state.soundEnabled);
+      if (sfxIcon) sfxIcon.textContent = this.state.soundEnabled ? '🔔' : '🔕';
+      if (this.state.soundEnabled) synthesizer.playPop();
+    });
+
+    const btnSpeech = document.getElementById('btn-toggle-speech');
+    const speechIcon = document.getElementById('speech-icon');
+    btnSpeech?.addEventListener('click', () => {
+      this.state.speechEnabled = !this.state.speechEnabled;
+      speechManager.setEnabled(this.state.speechEnabled);
+      btnSpeech.classList.toggle('active', this.state.speechEnabled);
+      btnSpeech.classList.toggle('muted', !this.state.speechEnabled);
+      if (speechIcon) speechIcon.textContent = this.state.speechEnabled ? '🗣️' : '🤫';
+      if (this.state.speechEnabled) speechManager.speak("Voice is on!");
+    });
+
+    document.getElementById('btn-toggle-fullscreen')?.addEventListener('click', () => {
+      synthesizer.playBubble();
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+  }
+
+  attachWelcomeOverlay() {
+    const overlay = document.getElementById('welcome-overlay');
+    const btnStart = document.getElementById('btn-start');
+
+    const unlockAndStart = () => {
+      synthesizer.init();
+      synthesizer.playTwinkle();
+      confettiEngine.burst(window.innerWidth / 2, window.innerHeight / 2, 80);
+      if (overlay) {
+        overlay.classList.add('hidden');
+        setTimeout(() => overlay.remove(), 500);
+      }
+      if (this.state.speechEnabled) {
+        speechManager.speak("Welcome! Let's learn words together!");
+      }
+    };
+
+    btnStart?.addEventListener('click', unlockAndStart);
+    overlay?.addEventListener('pointerdown', (e) => {
+      if (e.target === overlay) unlockAndStart();
+    });
+  }
+}
+
+// Bootstrap application on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  window.toddlerApp = new ToddlerApp();
+});
+</script>
+</body>
+</html>
