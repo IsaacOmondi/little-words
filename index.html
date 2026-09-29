@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#FFD93D">
+  <meta name="description" content="A playful, colorful web app for toddlers and guardians to learn and practice saying letters, colors, shapes, animals, objects, and more!">
+  <title>Toddler Play & Learn ⭐</title>
+
+  <!-- Google Fonts for Friendly Rounded Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <!-- Fullscreen Celebration Particles Canvas -->
+  <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+  <div class="app-container" id="app">
+    <!-- Header & Guardian Controls -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🎈</span>
+        <h1 class="brand-title">Little Words</h1>
+      </div>
+
+      <!-- Mode Switcher -->
+      <div class="mode-switcher" role="tablist" aria-label="Learning Mode">
+        <button type="button" class="mode-btn active" id="btn-mode-learn" role="tab" aria-selected="true">
+          <span class="mode-icon">👀</span>
+          <span class="mode-text">Explore</span>
+        </button>
+        <button type="button" class="mode-btn" id="btn-mode-quiz" role="tab" aria-selected="false">
+          <span class="mode-icon">🎯</span>
+          <span class="mode-text">Find It!</span>
+        </button>
+      </div>
+
+      <!-- Guardian Quick Settings / Audio Toolbar -->
+      <div class="guardian-toolbar">
+        <!-- Sound FX Toggle -->
+        <button type="button" class="tool-btn active" id="btn-toggle-sfx" title="Sound Effects On/Off" aria-label="Sound Effects On/Off" aria-pressed="true">
+          <span class="tool-icon" id="sfx-icon">🔔</span>
+          <span class="tool-label">SFX</span>
+        </button>
+
+        <!-- Speech / Pronunciation Toggle -->
+        <button type="button" class="tool-btn active" id="btn-toggle-speech" title="Voice Speech On/Off" aria-label="Voice Speech On/Off" aria-pressed="true">
+          <span class="tool-icon" id="speech-icon">🗣️</span>
+          <span class="tool-label">Voice</span>
+        </button>
+
+        <!-- Fullscreen Button -->
+        <button type="button" class="tool-btn" id="btn-toggle-fullscreen" title="Fullscreen Mode" aria-label="Fullscreen Mode">
+          <span class="tool-icon">⛶</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Category Navigation Bar -->
+    <nav class="category-nav" id="category-nav" aria-label="Learning Categories">
+      <!-- Category buttons generated dynamically by app.js -->
+    </nav>
+
+    <!-- Main Learning & Interactive Stage -->
+    <main class="interactive-stage" id="stage">
+      <!-- Stage views (Flashcard View or Quiz View) injected here -->
+      <div id="flashcard-view" class="view-container"></div>
+      <div id="quiz-view" class="view-container hidden"></div>
+    </main>
+
+    <!-- Footer with Tips for Guardians & Keyboard Notice -->
+    <footer class="app-footer">
+      <div class="footer-tip">
+        <span class="tip-icon">💡</span>
+        <span class="tip-text" id="footer-tip-text">Tap cards to hear & practice! Press <strong>A-Z</strong> or <strong>Spacebar</strong> for fun surprises.</span>
+      </div>
+      <div class="stars-counter" id="stars-counter" title="Stars Earned">
+        <span class="star-icon">⭐</span>
+        <span class="star-count" id="star-count-num">0</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Audio Unlock / Welcome Floating Toast for first interaction -->
+  <div class="welcome-overlay" id="welcome-overlay">
+    <div class="welcome-card">
+      <div class="welcome-emoji">🌟</div>
+      <h2>Let's Play & Learn!</h2>
+      <p>Tap anywhere to start learning words, colors, letters, and sounds together!</p>
+      <button type="button" class="start-btn" id="btn-start">
+        <span>Start Playing! 🚀</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
