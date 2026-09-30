@@ -143,7 +143,7 @@ export class QuizComponent {
       // Advance to next challenge after a celebration pause
       setTimeout(() => {
         this.onAdvance();
-      }, 1800);
+      }, 2500);
 
     } else {
       // Friendly Try Again (Non-Punitive)
