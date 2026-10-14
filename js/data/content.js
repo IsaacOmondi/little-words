@@ -561,7 +561,7 @@ export const LEARNING_ITEMS = [
     label: 'Dog',
     subLabel: 'Woof Woof!',
     phonics: 'Dog /dɔːɡ/',
-    speechText: 'Dog! Woof woof! Friendly puppy wagging its tail!',
+    speechText: 'D.O.G. Dog! Woof woof! Friendly puppy wagging its tail!',
     themeColor: '#F59E0B',
     sfx: 'pop',
     svgKey: 'dog'
@@ -572,7 +572,7 @@ export const LEARNING_ITEMS = [
     label: 'Cat',
     subLabel: 'Meow Meow!',
     phonics: 'Cat /kæt/',
-    speechText: 'Cat! Meow meow! Soft little kitten!',
+    speechText: 'C.A.T. Cat! Meow meow! Soft little kitten!',
     themeColor: '#EC4899',
     sfx: 'pop',
     svgKey: 'cat'
@@ -583,7 +583,7 @@ export const LEARNING_ITEMS = [
     label: 'Cow',
     subLabel: 'Moo Moo!',
     phonics: 'Cow /kaʊ/',
-    speechText: 'Cow! Moo moo! Big happy cow on the farm!',
+    speechText: 'C.O.W. Cow! Moo moo! Big happy cow on the farm!',
     themeColor: '#10B981',
     sfx: 'pop',
     svgKey: 'cow'
@@ -594,7 +594,7 @@ export const LEARNING_ITEMS = [
     label: 'Duck',
     subLabel: 'Quack Quack!',
     phonics: 'Duck /dʌk/',
-    speechText: 'Duck! Quack quack! Swimming in the pond!',
+    speechText: 'D.U.C.K. Duck! Quack quack! Swimming in the pond!',
     themeColor: '#EAB308',
     sfx: 'bubble',
     svgKey: 'duck'
@@ -605,7 +605,7 @@ export const LEARNING_ITEMS = [
     label: 'Lion',
     subLabel: 'Roar!',
     phonics: 'Lion /ˈlaɪən/',
-    speechText: 'Lion! Roar! The brave king of the jungle!',
+    speechText: 'L.I.O.N. Lion! Roar! The brave king of the jungle!',
     themeColor: '#F97316',
     sfx: 'pop',
     svgKey: 'lion'
@@ -616,7 +616,7 @@ export const LEARNING_ITEMS = [
     label: 'Elephant',
     subLabel: 'Trumpet!',
     phonics: 'Elephant /ˈɛləfənt/',
-    speechText: 'Elephant! Big ears and a long trunk!',
+    speechText: 'E.L.E.P.H.A.N.T. Elephant! Big ears and a long trunk!',
     themeColor: '#6366F1',
     sfx: 'pop',
     svgKey: 'elephant'
@@ -627,7 +627,7 @@ export const LEARNING_ITEMS = [
     label: 'Monkey',
     subLabel: 'Ooh Ooh Aah Aah!',
     phonics: 'Monkey /ˈmʌŋki/',
-    speechText: 'Monkey! Ooh ooh aah aah! Swinging in trees!',
+    speechText: 'M.O.N.K.E.Y. Monkey! Ooh ooh aah aah! Swinging in trees!',
     themeColor: '#84CC16',
     sfx: 'boing',
     svgKey: 'monkey'
@@ -638,7 +638,7 @@ export const LEARNING_ITEMS = [
     label: 'Bird',
     subLabel: 'Tweet Tweet!',
     phonics: 'Bird /bɜːrd/',
-    speechText: 'Bird! Tweet tweet! Flapping pretty wings!',
+    speechText: 'B.I.R.D. Bird! Tweet tweet! Flapping pretty wings!',
     themeColor: '#0EA5E9',
     sfx: 'twinkle',
     svgKey: 'bird'
@@ -649,7 +649,7 @@ export const LEARNING_ITEMS = [
     label: 'Frog',
     subLabel: 'Ribbit Ribbit!',
     phonics: 'Frog /frɔːɡ/',
-    speechText: 'Frog! Ribbit ribbit! Hop hop on a lily pad!',
+    speechText: 'F.R.O.G. Frog! Ribbit ribbit! Hop hop on a lily pad!',
     themeColor: '#22C55E',
     sfx: 'boing',
     svgKey: 'frog'
@@ -660,7 +660,7 @@ export const LEARNING_ITEMS = [
     label: 'Pig',
     subLabel: 'Oink Oink!',
     phonics: 'Pig /pɪɡ/',
-    speechText: 'Pig! Oink oink! Cute curly tail!',
+    speechText: 'P.I.G. Pig! Oink oink! Cute curly tail!',
     themeColor: '#F472B6',
     sfx: 'pop',
     svgKey: 'pig'
@@ -671,7 +671,7 @@ export const LEARNING_ITEMS = [
     label: 'Sheep',
     subLabel: 'Baa Baa!',
     phonics: 'Sheep /ʃiːp/',
-    speechText: 'Sheep! Baa baa! Fluffy soft wool!',
+    speechText: 'S.H.E.E.P. Sheep! Baa baa! Fluffy soft wool!',
     themeColor: '#64748B',
     sfx: 'pop',
     svgKey: 'sheep'
@@ -682,7 +682,7 @@ export const LEARNING_ITEMS = [
     label: 'Horse',
     subLabel: 'Neigh Neigh!',
     phonics: 'Horse /hɔːrs/',
-    speechText: 'Horse! Neigh! Galloping fast!',
+    speechText: 'H.O.R.S.E. Horse! Neigh! Galloping fast!',
     themeColor: '#A16207',
     sfx: 'pop',
     svgKey: 'horse'
@@ -697,7 +697,7 @@ export const LEARNING_ITEMS = [
     label: 'Cup',
     subLabel: 'Drink Water',
     phonics: 'Cup /kʌp/',
-    speechText: 'Cup! Sip, sip, drink some yummy water!',
+    speechText: 'C.U.P. Cup! Sip, sip, drink some yummy water!',
     themeColor: '#3B82F6',
     sfx: 'bubble',
     svgKey: 'cup'
@@ -708,21 +708,21 @@ export const LEARNING_ITEMS = [
     label: 'Spoon',
     subLabel: 'Time to Eat',
     phonics: 'Spoon /spuːn/',
-    speechText: 'Spoon! Yum yum, time to eat delicious food!',
+    speechText: 'S.P.O.O.N. Spoon! Yum yum, time to eat delicious food!',
     themeColor: '#10B981',
     sfx: 'pop',
     svgKey: 'spoon'
   },
   {
-    id: 'object-shoes',
-    categoryId: 'objects',
-    label: 'Shoes',
-    subLabel: 'Put on Shoes',
-    phonics: 'Shoes /ʃuːz/',
-    speechText: 'Shoes! Put on your shoes, let’s go outside and play!',
-    themeColor: '#EC4899',
-    sfx: 'pop',
-    svgKey: 'shoes'
+    id: ‘object-shoes’,
+    categoryId: ‘objects’,
+    label: ‘Shoes’,
+    subLabel: ‘Put on Shoes’,
+    phonics: ‘Shoes /ʃuːz/’,
+    speechText: ‘S.H.O.E.S. Shoes! Put on your shoes, let’s go outside and play!’,
+    themeColor: ‘#EC4899’,
+    sfx: ‘pop’,
+    svgKey: ‘shoes’
   },
   {
     id: 'object-ball',
@@ -730,7 +730,7 @@ export const LEARNING_ITEMS = [
     label: 'Ball',
     subLabel: 'Bounce Bounce',
     phonics: 'Ball /bɔːl/',
-    speechText: 'Ball! Bounce, bounce, catch the bouncy ball!',
+    speechText: 'B.A.L.L. Ball! Bounce, bounce, catch the bouncy ball!',
     themeColor: '#EF4444',
     sfx: 'boing',
     svgKey: 'ball'
@@ -741,7 +741,7 @@ export const LEARNING_ITEMS = [
     label: 'Bed',
     subLabel: 'Cozy Sleep',
     phonics: 'Bed /bɛd/',
-    speechText: 'Bed! Cozy and warm, time to sleep and dream!',
+    speechText: 'B.E.D. Bed! Cozy and warm, time to sleep and dream!',
     themeColor: '#8B5CF6',
     sfx: 'twinkle',
     svgKey: 'bed'
@@ -752,21 +752,21 @@ export const LEARNING_ITEMS = [
     label: 'Clock',
     subLabel: 'Tick Tock',
     phonics: 'Clock /klɒk/',
-    speechText: 'Clock! Tick tock, tick tock, what time is it?',
+    speechText: 'C.L.O.C.K. Clock! Tick tock, tick tock, what time is it?',
     themeColor: '#F59E0B',
     sfx: 'pop',
     svgKey: 'clock'
   },
   {
-    id: 'object-book',
-    categoryId: 'objects',
-    label: 'Book',
-    subLabel: 'Story Time',
-    phonics: 'Book /bʊk/',
-    speechText: 'Book! Open the book, let’s read a fun story together!',
-    themeColor: '#06B6D4',
-    sfx: 'pop',
-    svgKey: 'book'
+    id: ‘object-book’,
+    categoryId: ‘objects’,
+    label: ‘Book’,
+    subLabel: ‘Story Time’,
+    phonics: ‘Book /bʊk/’,
+    speechText: ‘B.O.O.K. Book! Open the book, let’s read a fun story together!’,
+    themeColor: ‘#06B6D4’,
+    sfx: ‘pop’,
+    svgKey: ‘book’
   },
   {
     id: 'object-car',
@@ -774,7 +774,7 @@ export const LEARNING_ITEMS = [
     label: 'Car',
     subLabel: 'Vroom Vroom!',
     phonics: 'Car /kɑːr/',
-    speechText: 'Car! Vroom, vroom! Beep beep!',
+    speechText: 'C.A.R. Car! Vroom, vroom! Beep beep!',
     themeColor: '#EF4444',
     sfx: 'pop',
     svgKey: 'car'
@@ -785,7 +785,7 @@ export const LEARNING_ITEMS = [
     label: 'Toothbrush',
     subLabel: 'Brush Brush',
     phonics: 'Toothbrush /ˈtuːθbrʌʃ/',
-    speechText: 'Toothbrush! Brush, brush, brush your shiny teeth!',
+    speechText: 'T.O.O.T.H.B.R.U.S.H. Toothbrush! Brush, brush, brush your shiny teeth!',
     themeColor: '#14B8A6',
     sfx: 'bubble',
     svgKey: 'toothbrush'
@@ -796,7 +796,7 @@ export const LEARNING_ITEMS = [
     label: 'Hat',
     subLabel: 'On Your Head',
     phonics: 'Hat /hæt/',
-    speechText: 'Hat! Put a cozy hat on your head!',
+    speechText: 'H.A.T. Hat! Put a cozy hat on your head!',
     themeColor: '#F97316',
     sfx: 'pop',
     svgKey: 'hat'
