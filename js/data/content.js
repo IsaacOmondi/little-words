@@ -714,15 +714,15 @@ export const LEARNING_ITEMS = [
     svgKey: 'spoon'
   },
   {
-    id: ‘object-shoes’,
-    categoryId: ‘objects’,
-    label: ‘Shoes’,
-    subLabel: ‘Put on Shoes’,
-    phonics: ‘Shoes /ʃuːz/’,
-    speechText: ‘S.H.O.E.S. Shoes! Put on your shoes, let’s go outside and play!’,
-    themeColor: ‘#EC4899’,
-    sfx: ‘pop’,
-    svgKey: ‘shoes’
+    id: 'object-shoes',
+    categoryId: 'objects',
+    label: 'Shoes',
+    subLabel: 'Put on Shoes',
+    phonics: 'Shoes /ʃuːz/',
+    speechText: 'S.H.O.E.S. Shoes! Put on your shoes, let us go outside and play!',
+    themeColor: '#EC4899',
+    sfx: 'pop',
+    svgKey: 'shoes'
   },
   {
     id: 'object-ball',
@@ -758,15 +758,15 @@ export const LEARNING_ITEMS = [
     svgKey: 'clock'
   },
   {
-    id: ‘object-book’,
-    categoryId: ‘objects’,
-    label: ‘Book’,
-    subLabel: ‘Story Time’,
-    phonics: ‘Book /bʊk/’,
-    speechText: ‘B.O.O.K. Book! Open the book, let’s read a fun story together!’,
-    themeColor: ‘#06B6D4’,
-    sfx: ‘pop’,
-    svgKey: ‘book’
+    id: 'object-book',
+    categoryId: 'objects',
+    label: 'Book',
+    subLabel: 'Story Time',
+    phonics: 'Book /bʊk/',
+    speechText: 'B.O.O.K. Book! Open the book, let us read a fun story together!',
+    themeColor: '#06B6D4',
+    sfx: 'pop',
+    svgKey: 'book'
   },
   {
     id: 'object-car',
